@@ -4,6 +4,13 @@ Author: Jeff Mahler
 """
 from setuptools import setup
 
+requirements = [
+    'numpy',
+    'matplotlib',
+    'mayavi',
+    'core',
+    'meshpy'
+]
 setup(name='visualization',
       version='0.1.dev0',
       description='AutoLab visualization code',
@@ -11,6 +18,7 @@ setup(name='visualization',
       author_email='jmahler@berkeley.edu',
       package_dir = {'': '.'},
       packages=['visualization'],
+      install_requires=requirements,
       #test_suite='test'
      )
 

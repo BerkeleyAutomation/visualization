@@ -2,13 +2,13 @@
 Common 3D visualizations
 Author: Jeff Mahler
 """
-import IPython
 import numpy as np
 
 try:
     import mayavi.mlab as mlab
 except ImportError:
     print "Could not import Mayavi! Visualizer will not be working."
+
 import matplotlib.pyplot as plt
 import matplotlib.tri as mtri
 
