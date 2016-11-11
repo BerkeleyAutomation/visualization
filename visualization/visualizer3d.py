@@ -168,7 +168,7 @@ class Visualizer3D:
         return mv_obj
 
     @staticmethod
-    def mesh(mesh, T_mesh_world=RigidTransform(from_frame='mesh', to_frame='world'),
+    def mesh(mesh, T_mesh_world=RigidTransform(from_frame='obj', to_frame='world'),
              style='wireframe', color=(0.5,0.5,0.5), opacity=1.0):
         """ Visualizes a 3D triangular mesh.
         
@@ -187,7 +187,7 @@ class Visualizer3D:
         """
         if not isinstance(mesh, Mesh3D):
             raise ValueError('Must provide a meshpy.Mesh3D object')
-        vertex_cloud = PointCloud(mesh.vertices.T, frame='mesh')
+        vertex_cloud = PointCloud(mesh.vertices.T, frame='obj')
         vertex_cloud_tf = T_mesh_world * vertex_cloud
         vertices = vertex_cloud_tf.data.T
         surface = mlab.triangular_mesh(vertices[:,0],
@@ -230,8 +230,8 @@ class Visualizer3D:
         T_obj_table = mesh.get_T_surface_obj(T_stp_obj).as_frames('obj', 'table')
         T_obj_world = T_table_world * T_obj_table
 
-        Visualizer.mesh(mesh, T_obj_world, style=style, color=color, opacity=opacity)
-        Visualizer.table(T_table_world)
+        Visualizer3D.mesh(mesh, T_obj_world, style=style, color=color, opacity=opacity)
+        Visualizer3D.table(T_table_world)
         return T_obj_world
 
     @staticmethod
@@ -284,7 +284,7 @@ class Visualizer3D:
         points_table = PointCloud(table_vertices, frame=T_table_world.from_frame)
         points_world = T_table_world * points_table
         table_tris = np.array([[0, 1, 2], [1, 2, 3]])
-        Visualizer.surface(points_world, table_tris, color=color)
+        Visualizer3D.surface(points_world, table_tris, color=color)
 
     @staticmethod
     def view(azimuth=None, elevation=None, distance=None, focalpoint=None):
