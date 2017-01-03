@@ -6,7 +6,7 @@
 Berkeley AutoLab Visualization Documentation
 ===================================
 Welcome to the documentation for the Berkeley AutoLab's `visualization` module!
-This module enables basic visualizations of 2D and 3D entities.
+This module enables visualizations of 2D and 3D entities.
 The `visualization` module is based on `matplotlib`_ and `mayavi`_,
 which you can install with pip.
 The `visualization` module also depends on the Berkeley AutoLab's `core`_ and
