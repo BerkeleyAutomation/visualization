@@ -24,7 +24,7 @@ class Visualizer3D:
     """
 
     @staticmethod
-    def figure(bgcolor=(1,1,1), size=(1000,1000)):
+    def figure(bgcolor=(1,1,1), size=(1000,1000), *args, **kwargs):
         """ Creates a figure.
 
         Parameters
@@ -33,8 +33,12 @@ class Visualizer3D:
            color of the background with values in [0,1] e.g. (1,1,1) = white
         size : 2-tuple
            size of the view window in pixels
+        args : list
+           args of mayavi figure
+        kwargs : list
+           keyword args of mayavi figure
         """
-        return mlab.figure(bgcolor=bgcolor, size=size)
+        return mlab.figure(bgcolor=bgcolor, size=size, *args, **kwargs)
     
     @staticmethod
     def show():
