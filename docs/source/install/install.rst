@@ -13,6 +13,8 @@ The `visualization` module also depends on the Berkeley AutoLab's `core`_ and
 .. _core: https://github.com/mmatl/core
 .. _perception: https://github.com/mmatl/perception
 
+Any other dependencies will be installed automatically when `visualization` is
+installed with `pip`.
 
 Cloning the Repository
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -25,7 +27,7 @@ You can clone or download our source code from `Github`_. ::
 Installation
 ~~~~~~~~~~~~
 To install `visualization` in your current Python environment, simply
-change directories into the `core` repository and run ::
+change directories into the `visualization` repository and run ::
 
     $ pip install -e .
 
