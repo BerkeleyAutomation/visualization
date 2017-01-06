@@ -7,6 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.tri as mtri
 
+from core import Box, Contour
 from perception import BinaryImage, ColorImage, DepthImage, SegmentationImage
 
 class Visualizer2D:

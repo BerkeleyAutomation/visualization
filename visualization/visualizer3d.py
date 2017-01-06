@@ -191,7 +191,7 @@ class Visualizer3D:
         """
         if not isinstance(mesh, Mesh3D):
             raise ValueError('Must provide a meshpy.Mesh3D object')
-        vertex_cloud = PointCloud(mesh.vertices.T, frame='obj')
+        vertex_cloud = PointCloud(mesh.vertices.T, frame=T_mesh_world.from_frame)
         vertex_cloud_tf = T_mesh_world * vertex_cloud
         vertices = vertex_cloud_tf.data.T
         surface = mlab.triangular_mesh(vertices[:,0],
