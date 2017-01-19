@@ -91,6 +91,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#cloning-the-repository">Cloning the Repository</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#building-documentation">Building Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#deploying-documentation">Deploying Documentation</a></li>
 </ul>
 </li>
 </ul>
@@ -132,7 +133,7 @@
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/install/install.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/install/install.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -150,6 +151,8 @@
 and <a class="reference external" href="http://docs.enthought.com/mayavi/mayavi/">mayavi</a> for 3D visualization, which you can install with pip.
 The <cite>visualization</cite> module also depends on the Berkeley AutoLab&#8217;s <a class="reference external" href="https://github.com/mmatl/core">core</a> and
 <a class="reference external" href="https://github.com/mmatl/perception">perception</a> modules, which can be installed from github.</p>
+<p>Any other dependencies will be installed automatically when <cite>visualization</cite> is
+installed with <cite>pip</cite>.</p>
 </div>
 <div class="section" id="cloning-the-repository">
 <h2>Cloning the Repository<a class="headerlink" href="#cloning-the-repository" title="Permalink to this headline">¶</a></h2>
@@ -161,7 +164,7 @@ The <cite>visualization</cite> module also depends on the Berkeley AutoLab&#8217
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>To install <cite>visualization</cite> in your current Python environment, simply
-change directories into the <cite>core</cite> repository and run</p>
+change directories into the <cite>visualization</cite> repository and run</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>$ pip install -e .
 </pre></div>
 </div>
@@ -183,7 +186,7 @@ specifically, <a class="reference external" href="http://www.sphinx-doc.org/en/1
 <div class="highlight-default"><div class="highlight"><pre><span></span>$ pip install -r docs_requirements.txt
 </pre></div>
 </div>
-<p>Then, go to the <cite>docs</cite> directory and run <cite>make</cite> with the appropriate target.
+<p>Then, go to the <cite>docs</cite> directory and run <code class="docutils literal"><span class="pre">make</span></code> with the appropriate target.
 For example,</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>$ cd docs/
 $ make html
@@ -191,6 +194,18 @@ $ make html
 </div>
 <p>will generate a set of web pages. Any documentation files
 generated in this manner can be found in <cite>docs/build</cite>.</p>
+</div>
+<div class="section" id="deploying-documentation">
+<h2>Deploying Documentation<a class="headerlink" href="#deploying-documentation" title="Permalink to this headline">¶</a></h2>
+<p>To deploy documentation to the Github Pages site for the repository,
+simply push any changes to the documentation source to master
+and then run</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ . gh_deploy.sh
+</pre></div>
+</div>
+<p>from the <cite>docs</cite> folder. This script will automatically checkout the
+<code class="docutils literal"><span class="pre">gh-pages</span></code> branch, build the documentation from source, and push it
+to Github.</p>
 </div>
 </div>
 

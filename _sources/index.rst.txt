@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Berkeley AutoLab Visualization Documentation
-===================================
+============================================
 Welcome to the documentation for the Berkeley AutoLab's `visualization` module!
 This module enables visualizations of 2D and 3D entities.
 The `visualization` module is based on `matplotlib`_ and `mayavi`_,
