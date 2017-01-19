@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import matplotlib.tri as mtri
 
 from core import Box, Contour
-from perception import BinaryImage, ColorImage, DepthImage, SegmentationImage
+from perception import BinaryImage, ColorImage, DepthImage, GrayscaleImage, SegmentationImage
 
 class Visualizer2D:
     @staticmethod
@@ -80,7 +80,7 @@ class Visualizer2D:
         image : :obj:`perception.Image`
             image to display
         """
-        if isinstance(image, BinaryImage):
+        if isinstance(image, BinaryImage) or isinstance(image, GrayscaleImage):
             plt.imshow(image.data, cmap=plt.cm.gray)
         elif isinstance(image, ColorImage) or isinstance(image, SegmentationImage):
             plt.imshow(image.data)
