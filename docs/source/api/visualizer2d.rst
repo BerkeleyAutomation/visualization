@@ -1,5 +1,5 @@
 2-Dimensional Visualization
-==============
+===========================
 
 Visualizer2D
 ~~~~~~~~~~~~
