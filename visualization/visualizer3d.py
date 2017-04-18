@@ -53,7 +53,7 @@ class Visualizer3D:
         mlab.clf()
 
     @staticmethod
-    def points(points, T_points_world=None, color=(0,1,0), scale=0.01, subsample=None):
+    def points(points, T_points_world=None, color=(0,1,0), scale=0.01, subsample=None, random=False):
         """ Scatters a point cloud in pose T_points_world.
         
         Parameters
@@ -73,7 +73,7 @@ class Visualizer3D:
             raise ValueError('Data type %s not supported' %(type(points)))
                                  
         if subsample is not None:
-            points = points.subsample(subsample)
+            points = points.subsample(subsample, random=random)
      
         # transform into world frame
         if points.frame != 'world':
@@ -205,7 +205,8 @@ class Visualizer3D:
     @staticmethod
     def mesh_stable_pose(mesh, stable_pose,
                          T_table_world=RigidTransform(from_frame='table', to_frame='world'),
-                         style='wireframe', color=(0.5,0.5,0.5), opacity=1.0):
+                         style='wireframe', color=(0.5,0.5,0.5),
+                         opacity=1.0, dim=0.15, plot_table=True):
         """ Visualizes a 3D triangular mesh.
         
         Parameters
@@ -222,6 +223,8 @@ class Visualizer3D:
             color tuple
         opacity : float
             how opaque to render the surface
+        dim : float
+            the dimension of the table
 
         Returns
         -------
@@ -235,11 +238,12 @@ class Visualizer3D:
         T_obj_world = T_table_world * T_obj_table
 
         Visualizer3D.mesh(mesh, T_obj_world, style=style, color=color, opacity=opacity)
-        Visualizer3D.table(T_table_world)
+        if plot_table:
+            Visualizer3D.table(T_table_world, dim=dim)
         return T_obj_world
 
     @staticmethod
-    def pose(T_frame_world, alpha=0.5, tube_radius=0.005, center_scale=0.025):
+    def pose(T_frame_world, alpha=0.5, tube_radius=0.005, center_scale=0.01):
         """ Plots a pose with frame label.
         
         Parameters
@@ -266,7 +270,7 @@ class Visualizer3D:
         mlab.plot3d(y_axis_tf[:,0], y_axis_tf[:,1], y_axis_tf[:,2], color=(0,1,0), tube_radius=tube_radius)
         mlab.plot3d(z_axis_tf[:,0], z_axis_tf[:,1], z_axis_tf[:,2], color=(0,0,1), tube_radius=tube_radius)
 
-        mlab.text3d(t[0], t[1], t[2], ' %s' %T_frame_world.from_frame.upper(), scale=0.01)
+        #mlab.text3d(t[0], t[1], t[2], ' %s' %T_frame_world.from_frame.upper(), scale=0.01)
 
     @staticmethod
     def table(T_table_world=RigidTransform(from_frame='table', to_frame='world'), dim=0.16, color=(0,0,0)):
