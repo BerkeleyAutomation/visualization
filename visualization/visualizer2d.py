@@ -4,6 +4,8 @@ Author: Jeff Mahler
 """
 import numpy as np
 
+import IPython
+
 import matplotlib.pyplot as plt
 import matplotlib.tri as mtri
 
@@ -62,6 +64,16 @@ class Visualizer2D:
         plt.title(*args, **kwargs)
 
     @staticmethod
+    def xlabel(*args, **kwargs):
+        """ Creates an x axis label in the current figure """
+        plt.xlabel(*args, **kwargs)
+
+    @staticmethod
+    def ylabel(*args, **kwargs):
+        """ Creates an y axis label in the current figure """
+        plt.ylabel(*args, **kwargs)
+
+    @staticmethod
     def scatter(*args, **kwargs):
         """ Scatters points """
         plt.scatter(*args, **kwargs)
@@ -86,6 +98,9 @@ class Visualizer2D:
             plt.imshow(image.data)
         elif isinstance(image, DepthImage):
             plt.imshow(image.data, cmap=plt.cm.gray_r)
+        else:
+            IPython.embed()
+
         plt.axis('off')
 
     @staticmethod

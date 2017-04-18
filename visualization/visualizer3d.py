@@ -53,7 +53,7 @@ class Visualizer3D:
         mlab.clf()
 
     @staticmethod
-    def points(points, T_points_world=None, color=(0,1,0), scale=0.01, subsample=None):
+    def points(points, T_points_world=None, color=(0,1,0), scale=0.01, subsample=None, random=False):
         """ Scatters a point cloud in pose T_points_world.
         
         Parameters
@@ -73,7 +73,7 @@ class Visualizer3D:
             raise ValueError('Data type %s not supported' %(type(points)))
                                  
         if subsample is not None:
-            points = points.subsample(subsample)
+            points = points.subsample(subsample, random=random)
      
         # transform into world frame
         if points.frame != 'world':
