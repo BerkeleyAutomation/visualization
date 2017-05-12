@@ -14,7 +14,7 @@ import matplotlib.tri as mtri
 
 from core import RigidTransform
 from core import BagOfPoints, Point, PointCloud, RgbPointCloud, NormalCloud
-from meshpy import Mesh3D, StablePose
+from meshpy import Mesh3D, Sdf3D, StablePose
 
 class Visualizer3D:
     """
@@ -241,6 +241,74 @@ class Visualizer3D:
         if plot_table:
             Visualizer3D.table(T_table_world, dim=dim)
         return T_obj_world
+
+    @staticmethod
+    def mesh_table(mesh, T_obj_table,
+                   T_table_world=RigidTransform(from_frame='table', to_frame='world'),
+                   style='wireframe', color=(0.5,0.5,0.5),
+                   opacity=1.0, dim=0.15, plot_table=True):
+        """ Visualizes a 3D triangular mesh.
+        
+        Parameters
+        ----------
+        mesh : :obj:`meshpy.Mesh3D`
+            mesh to visualize
+        T_mesh_table : :obj:`core.RigidTransform`
+            pose of mesh wrt table (rotation only)
+        T_table_world : :obj:`core.RigidTransform`
+            pose of table, specified as a transformation from mesh frame to world frame
+        style : :obj:`str`
+            triangular mesh style, see Mayavi docs
+        color : 3-tuple
+            color tuple
+        opacity : float
+            how opaque to render the surface
+        dim : float
+            the dimension of the table
+
+        Returns
+        -------
+        :obj:`core.RigidTransform`
+            pose of the mesh in world frame
+        """
+        if not isinstance(T_obj_table, RigidTransform):
+            raise ValueError('Must provide a core.RigidTransform object')
+        T_obj_table = mesh.get_T_surface_obj(T_obj_table).as_frames('obj', 'table')
+        T_obj_world = T_table_world * T_obj_table
+
+        Visualizer3D.mesh(mesh, T_obj_world, style=style, color=color, opacity=opacity)
+        if plot_table:
+            Visualizer3D.table(T_table_world, dim=dim)
+        return T_obj_world
+
+    @staticmethod
+    def sdf(sdf, T_sdf_world=RigidTransform(from_frame='obj', to_frame='world'),
+             color=(0.5,0.5,0.5), scale=0.01, subsample=1, random=False):
+        """ Visualizes points on the surface of a 3D signed distance field (SDF)
+        
+        Parameters
+        ----------
+        sdf : :obj:`meshpy.Sdf3D`
+            sdf to visualize
+        T_sdf_world : :obj:`core.RigidTransform`
+            pose of sdf, specified as a transformation from sdf frame to world frame
+        color : 3-tuple
+            color tuple
+        scale : float
+            scale of the points
+        subsample : int
+            rate to subsample the point cloud
+        random : bool
+            whether or not to subsample points randomly
+        """
+        if not isinstance(sdf, Sdf3D):
+            raise ValueError('Must provide a meshpy.Sdf3D object')
+        points, _ = sdf.surface_points(grid_basis=False) 
+        point_cloud = PointCloud(points.T, frame=T_sdf_world.from_frame)
+        return Visualizer3D.points(point_cloud, T_points_world=T_sdf_world,
+                                   color=color, scale=scale, subsample=subsample,
+                                   random=random)
+
 
     @staticmethod
     def pose(T_frame_world, alpha=0.5, tube_radius=0.005, center_scale=0.01):

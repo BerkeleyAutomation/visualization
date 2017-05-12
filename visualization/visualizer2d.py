@@ -72,7 +72,7 @@ class Visualizer2D:
         plt.plot(*args, **kwargs)
     
     @staticmethod
-    def imshow(image):
+    def imshow(image, **kwargs):
         """ Displays an image.
 
         Parameters
@@ -81,11 +81,11 @@ class Visualizer2D:
             image to display
         """
         if isinstance(image, BinaryImage) or isinstance(image, GrayscaleImage):
-            plt.imshow(image.data, cmap=plt.cm.gray)
+            plt.imshow(image.data, cmap=plt.cm.gray, **kwargs)
         elif isinstance(image, ColorImage) or isinstance(image, SegmentationImage):
-            plt.imshow(image.data)
+            plt.imshow(image.data, **kwargs)
         elif isinstance(image, DepthImage):
-            plt.imshow(image.data, cmap=plt.cm.gray_r)
+            plt.imshow(image.data, cmap=plt.cm.gray_r, **kwargs)
         plt.axis('off')
 
     @staticmethod
