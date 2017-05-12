@@ -4,6 +4,8 @@ Author: Jeff Mahler
 """
 import numpy as np
 
+import IPython
+
 import matplotlib.pyplot as plt
 import matplotlib.tri as mtri
 
@@ -60,6 +62,16 @@ class Visualizer2D:
     def title(*args, **kwargs):
         """ Creates a title in the current figure """
         plt.title(*args, **kwargs)
+
+    @staticmethod
+    def xlabel(*args, **kwargs):
+        """ Creates an x axis label in the current figure """
+        plt.xlabel(*args, **kwargs)
+
+    @staticmethod
+    def ylabel(*args, **kwargs):
+        """ Creates an y axis label in the current figure """
+        plt.ylabel(*args, **kwargs)
 
     @staticmethod
     def scatter(*args, **kwargs):
