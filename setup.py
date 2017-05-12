@@ -8,8 +8,6 @@ requirements = [
     'numpy',
     'matplotlib',
     'mayavi',
-    'core',
-    'meshpy'
 ]
 setup(name='visualization',
       version='0.1.dev0',
