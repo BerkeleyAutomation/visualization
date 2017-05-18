@@ -9,9 +9,6 @@ try:
 except ImportError:
     print "Could not import Mayavi! Visualizer will not be working."
 
-import matplotlib.pyplot as plt
-import matplotlib.tri as mtri
-
 from core import RigidTransform
 from core import BagOfPoints, Point, PointCloud, RgbPointCloud, NormalCloud
 from meshpy import Mesh3D, Sdf3D, StablePose
@@ -138,7 +135,7 @@ class Visualizer3D:
         point_data = points_world.data
         mv_obj = mlab.quiver3d(point_data[0,:], point_data[1,:], point_data[2,:],
                                normal_data[0,:], normal_data[1,:], normal_data[2,:],
-                              color=color, scale_factor=scale)
+                               color=color, scale_factor=scale)
         return mv_obj
 
     @staticmethod
@@ -311,7 +308,8 @@ class Visualizer3D:
 
 
     @staticmethod
-    def pose(T_frame_world, alpha=0.5, tube_radius=0.005, center_scale=0.01):
+    def pose(T_frame_world, alpha=0.5, tube_radius=0.005, center_scale=0.01,
+             show_frame=False):
         """ Plots a pose with frame label.
         
         Parameters
@@ -324,6 +322,8 @@ class Visualizer3D:
             radius of plotted x,y,z axes
         center_scale : float
             scale of the pose's origin
+        show_frame : bool
+            whether to show the frame name in text
         """
         R = T_frame_world.rotation
         t = T_frame_world.translation
@@ -338,7 +338,8 @@ class Visualizer3D:
         mlab.plot3d(y_axis_tf[:,0], y_axis_tf[:,1], y_axis_tf[:,2], color=(0,1,0), tube_radius=tube_radius)
         mlab.plot3d(z_axis_tf[:,0], z_axis_tf[:,1], z_axis_tf[:,2], color=(0,0,1), tube_radius=tube_radius)
 
-        #mlab.text3d(t[0], t[1], t[2], ' %s' %T_frame_world.from_frame.upper(), scale=0.01)
+        if show_frame:
+            mlab.text3d(t[0], t[1], t[2], ' %s' %T_frame_world.from_frame.upper(), scale=0.01, color=(0,0,0))
 
     @staticmethod
     def table(T_table_world=RigidTransform(from_frame='table', to_frame='world'), dim=0.16, color=(0,0,0)):

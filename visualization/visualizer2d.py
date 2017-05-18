@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import matplotlib.tri as mtri
 
 from core import Box, Contour
-from perception import BinaryImage, ColorImage, DepthImage, GrayscaleImage, SegmentationImage
+from perception import BinaryImage, ColorImage, DepthImage, GrayscaleImage, RgbdImage, GdImage, SegmentationImage
 
 class Visualizer2D:
     @staticmethod
@@ -98,6 +98,12 @@ class Visualizer2D:
             plt.imshow(image.data, **kwargs)
         elif isinstance(image, DepthImage):
             plt.imshow(image.data, cmap=plt.cm.gray_r, **kwargs)
+        elif isinstance(image, RgbdImage):
+            # default to showing color only, for now...
+            plt.imshow(image.color.data, **kwargs)
+        elif isinstance(image, GdImage):
+            # default to showing gray only, for now...
+            plt.imshow(image.gray.data, cmap=plt.cm.gray, **kwargs)
         plt.axis('off')
 
     @staticmethod
