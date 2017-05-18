@@ -38,10 +38,29 @@ class Visualizer3D:
         return mlab.figure(bgcolor=bgcolor, size=size, *args, **kwargs)
     
     @staticmethod
-    def show():
+    def show(animate=False, az=0.5, delay=10):
         """ Displays a figure and enables interaction.
+
+        Parameters
+        ----------
+        animate : bool
+            whether or not to animate the scene
+        az : float (optional)
+            the azimuth to rotate for each animation
+        delay : float (optional)
+            the amount of delay between subsequent frames
         """
-        mlab.show()
+        if animate:
+            @mlab.animate(delay=delay)
+            def anim():
+                f = mlab.gcf()
+                while f.scene is not None:
+                    f.scene.camera.azimuth(az)
+                    f.scene.render()
+                    yield
+            a = anim()
+        else:
+            mlab.show()
 
     @staticmethod
     def clf():

@@ -10,7 +10,7 @@ requirements = [
     'mayavi',
 ]
 setup(name='visualization',
-      version='0.1.dev0',
+      version='0.1.0',
       description='AutoLab visualization code',
       author='Jeff Mahler',
       author_email='jmahler@berkeley.edu',
