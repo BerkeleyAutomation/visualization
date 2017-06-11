@@ -59,8 +59,7 @@ class Visualizer3D:
                     f.scene.render()
                     yield
             a = anim()
-        else:
-            mlab.show()
+        mlab.show()
 
     @staticmethod
     def clf():
