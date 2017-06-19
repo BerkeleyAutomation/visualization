@@ -9,12 +9,12 @@ Welcome to the documentation for the Berkeley AutoLab's `visualization` module!
 This module enables visualizations of 2D and 3D entities.
 The `visualization` module is based on `matplotlib`_ and `mayavi`_,
 which you can install with pip.
-The `visualization` module also depends on the Berkeley AutoLab's `core`_ and
+The `visualization` module also depends on the Berkeley AutoLab's `autolab_core`_ and
 `perception`_ modules, which can be installed from github.
 
 .. _matplotlib: http://www.matplotlib.org/
 .. _mayavi: http://docs.enthought.com/mayavi/mayavi/
-.. _core: https://github.com/mmatl/core
+.. _autolab_core: https://github.com/BerkeleyAutomation/autolab_core
 .. _perception: https://github.com/mmatl/perception
 
 Contents:

@@ -13,6 +13,8 @@
 
   
   
+  
+  
 
   
 
@@ -44,6 +46,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -84,7 +87,10 @@
           
             
             
-                <p class="caption"><span class="caption-text">Installation Guide</span></p>
+              
+            
+            
+              <p class="caption"><span class="caption-text">Installation Guide</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation Instructions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#dependencies">Dependencies</a></li>
@@ -111,8 +117,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">visualization</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">visualization</a>
+        
       </nav>
 
 
@@ -121,23 +129,40 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
-      
-    <li>Installation Instructions</li>
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Installation Instructions</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
             <a href="../_sources/install/install.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -149,7 +174,7 @@
 <h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
 <p>The <cite>visualization</cite> module uses <a class="reference external" href="http://www.matplotlib.org/">matplotlib</a> for 2D visualization
 and <a class="reference external" href="http://docs.enthought.com/mayavi/mayavi/">mayavi</a> for 3D visualization, which you can install with pip.
-The <cite>visualization</cite> module also depends on the Berkeley AutoLab&#8217;s <a class="reference external" href="https://github.com/mmatl/core">core</a> and
+The <cite>visualization</cite> module also depends on the Berkeley AutoLab’s <a class="reference external" href="https://github.com/BerkeleyAutomation/autolab_core">autolab_core</a> and
 <a class="reference external" href="https://github.com/mmatl/perception">perception</a> modules, which can be installed from github.</p>
 <p>Any other dependencies will be installed automatically when <cite>visualization</cite> is
 installed with <cite>pip</cite>.</p>
@@ -180,7 +205,7 @@ change directories into the <cite>visualization</cite> repository and run</p>
 </div>
 <div class="section" id="building-documentation">
 <h2>Building Documentation<a class="headerlink" href="#building-documentation" title="Permalink to this headline">¶</a></h2>
-<p>Building <cite>visualization</cite>&#8216;s documentation requires a few extra dependencies &#8211;
+<p>Building <cite>visualization</cite>’s documentation requires a few extra dependencies –
 specifically, <a class="reference external" href="http://www.sphinx-doc.org/en/1.4.8/">sphinx</a> and a few plugins.</p>
 <p>To install the dependencies required, simply run</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>$ pip install -r docs_requirements.txt
@@ -211,15 +236,18 @@ to Github.</p>
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../api/visualizer2d.html" class="btn btn-neutral float-right" title="2-Dimensional Visualization" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../api/visualizer2d.html" class="btn btn-neutral float-right" title="2-Dimensional Visualization" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../index.html" class="btn btn-neutral" title="Berkeley AutoLab Visualization Documentation" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../index.html" class="btn btn-neutral" title="Berkeley AutoLab Visualization Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -253,7 +281,8 @@ to Github.</p>
             VERSION:'0.0.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>
