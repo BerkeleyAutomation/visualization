@@ -9,7 +9,7 @@ import IPython
 import matplotlib.pyplot as plt
 import matplotlib.tri as mtri
 
-from core import Box, Contour
+from autolab_core import Box, Contour
 from perception import BinaryImage, ColorImage, DepthImage, GrayscaleImage, RgbdImage, GdImage, SegmentationImage
 
 class Visualizer2D:
@@ -112,7 +112,7 @@ class Visualizer2D:
 
         Parameters
         ----------
-        b : :obj:`core.Box`
+        b : :obj:`autolab_core.Box`
             box to draw
         line_width : int
             width of lines on side of box
@@ -152,7 +152,7 @@ class Visualizer2D:
 
         Parameters
         ----------
-        c : :obj:`core.Contour`
+        c : :obj:`autolab_core.Contour`
             contour to draw
         subsample : int
             subsample rate for boundary pixels
