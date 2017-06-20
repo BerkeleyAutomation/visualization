@@ -74,6 +74,11 @@ class Visualizer2D:
         plt.ylabel(*args, **kwargs)
 
     @staticmethod
+    def legend(*args, **kwargs):
+        """ Creates a legend for the current figure """
+        plt.legend(*args, **kwargs)
+
+    @staticmethod
     def scatter(*args, **kwargs):
         """ Scatters points """
         plt.scatter(*args, **kwargs)
