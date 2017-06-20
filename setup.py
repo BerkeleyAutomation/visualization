@@ -17,6 +17,5 @@ setup(name='visualization',
       package_dir = {'': '.'},
       packages=['visualization'],
       install_requires=requirements,
-      #test_suite='test'
      )
 

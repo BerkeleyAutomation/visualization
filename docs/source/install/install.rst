@@ -5,12 +5,12 @@ Dependencies
 ~~~~~~~~~~~~
 The `visualization` module uses `matplotlib`_ for 2D visualization
 and `mayavi`_ for 3D visualization, which you can install with pip.
-The `visualization` module also depends on the Berkeley AutoLab's `core`_ and
+The `visualization` module also depends on the Berkeley AutoLab's `autolab_core`_ and
 `perception`_ modules, which can be installed from github.
 
 .. _matplotlib: http://www.matplotlib.org/
 .. _mayavi: http://docs.enthought.com/mayavi/mayavi/
-.. _core: https://github.com/mmatl/core
+.. _autolab_core: https://github.com/BerkeleyAutomation/autolab_core
 .. _perception: https://github.com/mmatl/perception
 
 Any other dependencies will be installed automatically when `visualization` is

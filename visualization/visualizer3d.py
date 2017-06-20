@@ -9,8 +9,8 @@ try:
 except ImportError:
     print "Could not import Mayavi! Visualizer will not be working."
 
-from core import RigidTransform
-from core import BagOfPoints, Point, PointCloud, RgbPointCloud, NormalCloud
+from autolab_core import RigidTransform
+from autolab_core import BagOfPoints, Point, PointCloud, RgbPointCloud, NormalCloud
 from meshpy import Mesh3D, Sdf3D, StablePose
 
 class Visualizer3D:
@@ -59,8 +59,7 @@ class Visualizer3D:
                     f.scene.render()
                     yield
             a = anim()
-        else:
-            mlab.show()
+        mlab.show()
 
     @staticmethod
     def clf():
@@ -74,9 +73,9 @@ class Visualizer3D:
         
         Parameters
         ----------
-        points : :obj:`core.BagOfPoints`
+        points : :obj:`autolab_core.BagOfPoints`
             point set to visualize
-        T_points_world : :obj:`core.RigidTransform`
+        T_points_world : :obj:`autolab_core.RigidTransform`
             pose of points, specified as a transformation from point frame to world frame
         color : 3-tuple
             color tuple
@@ -111,11 +110,11 @@ class Visualizer3D:
         
         Parameters
         ----------
-        normals : :obj:`core.NormalCloud`
+        normals : :obj:`autolab_core.NormalCloud`
             normal cloud to visualize
-        points : :obj:`core.BagOfPoints`
+        points : :obj:`autolab_core.BagOfPoints`
             set of points where the normals are rooted (must have the same number of elements as normals)
-        T_normals_world : :obj:`core.RigidTransform`
+        T_normals_world : :obj:`autolab_core.RigidTransform`
             pose of points and surface normals, specified as a transformation from normals frame to world frame
         color : 3-tuple
             color tuple
@@ -164,11 +163,11 @@ class Visualizer3D:
         
         Parameters
         ----------
-        points : :obj:`core.BagOfPoints`
+        points : :obj:`autolab_core.BagOfPoints`
             point set to visualize
         triangles : Nx3 :obj:`numpy.ndarray`
             set of N triangles specified as triplets of integer indices in the points array
-        T_points_world : :obj:`core.RigidTransform`
+        T_points_world : :obj:`autolab_core.RigidTransform`
             pose of points, specified as a transformation from point frame to world frame
         color : 3-tuple
             color tuple
@@ -196,7 +195,7 @@ class Visualizer3D:
         ----------
         mesh : :obj:`meshpy.Mesh3D`
             mesh to visualize
-        T_mesh_world : :obj:`core.RigidTransform`
+        T_mesh_world : :obj:`autolab_core.RigidTransform`
             pose of mesh, specified as a transformation from mesh frame to world frame
         style : :obj:`str`
             triangular mesh style, see Mayavi docs
@@ -231,7 +230,7 @@ class Visualizer3D:
             mesh to visualize
         stable_pose : :obj:`meshpy.StablePose`
             stable pose to visualize
-        T_table_world : :obj:`core.RigidTransform`
+        T_table_world : :obj:`autolab_core.RigidTransform`
             pose of table, specified as a transformation from mesh frame to world frame
         style : :obj:`str`
             triangular mesh style, see Mayavi docs
@@ -244,7 +243,7 @@ class Visualizer3D:
 
         Returns
         -------
-        :obj:`core.RigidTransform`
+        :obj:`autolab_core.RigidTransform`
             pose of the mesh in world frame
         """
         if not isinstance(stable_pose, StablePose):
@@ -269,9 +268,9 @@ class Visualizer3D:
         ----------
         mesh : :obj:`meshpy.Mesh3D`
             mesh to visualize
-        T_mesh_table : :obj:`core.RigidTransform`
+        T_mesh_table : :obj:`autolab_core.RigidTransform`
             pose of mesh wrt table (rotation only)
-        T_table_world : :obj:`core.RigidTransform`
+        T_table_world : :obj:`autolab_core.RigidTransform`
             pose of table, specified as a transformation from mesh frame to world frame
         style : :obj:`str`
             triangular mesh style, see Mayavi docs
@@ -284,11 +283,11 @@ class Visualizer3D:
 
         Returns
         -------
-        :obj:`core.RigidTransform`
+        :obj:`autolab_core.RigidTransform`
             pose of the mesh in world frame
         """
         if not isinstance(T_obj_table, RigidTransform):
-            raise ValueError('Must provide a core.RigidTransform object')
+            raise ValueError('Must provide an autolab_core.RigidTransform object')
         T_obj_table = mesh.get_T_surface_obj(T_obj_table).as_frames('obj', 'table')
         T_obj_world = T_table_world * T_obj_table
 
@@ -306,7 +305,7 @@ class Visualizer3D:
         ----------
         sdf : :obj:`meshpy.Sdf3D`
             sdf to visualize
-        T_sdf_world : :obj:`core.RigidTransform`
+        T_sdf_world : :obj:`autolab_core.RigidTransform`
             pose of sdf, specified as a transformation from sdf frame to world frame
         color : 3-tuple
             color tuple
@@ -333,7 +332,7 @@ class Visualizer3D:
         
         Parameters
         ----------
-        T_frame_world : :obj:`core.RigidTransform`
+        T_frame_world : :obj:`autolab_core.RigidTransform`
             pose specified as a transformation from the poses frame to the world frame
         alpha : float
             length of plotted x,y,z axes
@@ -366,7 +365,7 @@ class Visualizer3D:
         
         Parameters
         ----------
-        T_table_world : :obj:`core.RigidTransform`
+        T_table_world : :obj:`autolab_core.RigidTransform`
             pose of the table in world frame
         dim : float
             the dimensions of the table
