@@ -44,6 +44,16 @@ class Visualizer2D:
         plt.clf(*args, **kwargs)
 
     @staticmethod
+    def xlim(*args, **kwargs):
+        """ Set the x limits of the current figure """
+        plt.xlim(*args, **kwargs)
+
+    @staticmethod
+    def ylim(*args, **kwargs):
+        """ Set the y limits the current figure """
+        plt.ylim(*args, **kwargs)
+
+    @staticmethod
     def savefig(*args, **kwargs):
         """ Save the current figure """
         plt.savefig(*args, **kwargs)
