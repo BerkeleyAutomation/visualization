@@ -326,7 +326,7 @@ class Visualizer3D:
 
 
     @staticmethod
-    def pose(T_frame_world, alpha=0.5, tube_radius=0.005, center_scale=0.01,
+    def pose(T_frame_world, alpha=0.1, tube_radius=0.005, center_scale=0.01,
              show_frame=False):
         """ Plots a pose with frame label.
         
