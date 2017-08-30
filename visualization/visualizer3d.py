@@ -68,6 +68,12 @@ class Visualizer3D:
         mlab.clf()
 
     @staticmethod
+    def close(*args, **kwargs):
+        """ Close the current figure
+        """
+        mlab.close(*args, **kwargs)
+
+    @staticmethod
     def points(points, T_points_world=None, color=(0,1,0), scale=0.01, subsample=None, random=False):
         """ Scatters a point cloud in pose T_points_world.
         
@@ -255,6 +261,7 @@ class Visualizer3D:
         Visualizer3D.mesh(mesh, T_obj_world, style=style, color=color, opacity=opacity)
         if plot_table:
             Visualizer3D.table(T_table_world, dim=dim)
+        Visualizer3D.points(Point(mesh.center_of_mass, 'obj'), T_obj_world, scale=0.01)
         return T_obj_world
 
     @staticmethod
@@ -424,3 +431,8 @@ class Visualizer3D:
     def axes():
         """ Plot the x,y,z axes. """
         mlab.axes()
+
+    @staticmethod
+    def text(*args, **kwargs):
+        """ Plot text. """
+        mlab.text(*args, **kwargs)
