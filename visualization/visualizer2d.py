@@ -34,9 +34,18 @@ class Visualizer2D:
         return plt.figure(figsize=size, *args, **kwargs)
     
     @staticmethod
-    def show(*args, **kwargs):
-        """ Show the current figure """
-        plt.show(*args, **kwargs)
+    def show(filename=None, *args, **kwargs):
+        """ Show the current figure.
+
+        Parameters
+        ----------
+        filename : :obj:`str`
+            filename to save the image to, for auto-saving
+        """
+        if filename is None:
+            plt.show(*args, **kwargs)
+        else:
+            plt.savefig(filename, *args, **kwargs)
 
     @staticmethod
     def clf(*args, **kwargs):
@@ -99,13 +108,15 @@ class Visualizer2D:
         plt.plot(*args, **kwargs)
     
     @staticmethod
-    def imshow(image, **kwargs):
+    def imshow(image, auto_subplot=False, **kwargs):
         """ Displays an image.
 
         Parameters
         ----------
         image : :obj:`perception.Image`
             image to display
+        auto_subplot : bool
+            whether or not to automatically subplot for multi-channel images e.g. rgbd
         """
         if isinstance(image, BinaryImage) or isinstance(image, GrayscaleImage):
             plt.imshow(image.data, cmap=plt.cm.gray, **kwargs)
@@ -114,11 +125,23 @@ class Visualizer2D:
         elif isinstance(image, DepthImage):
             plt.imshow(image.data, cmap=plt.cm.gray_r, **kwargs)
         elif isinstance(image, RgbdImage):
-            # default to showing color only, for now...
-            plt.imshow(image.color.data, **kwargs)
+            if auto_subplot:
+                plt.subplot(1,2,1)
+                plt.imshow(image.color.data, **kwargs)
+                plt.axis('off')
+                plt.subplot(1,2,2)
+                plt.imshow(image.depth.data, cmap=plt.cm.gray_r, **kwargs)
+            else:
+                plt.imshow(image.color.data, **kwargs)                
         elif isinstance(image, GdImage):
-            # default to showing gray only, for now...
-            plt.imshow(image.gray.data, cmap=plt.cm.gray, **kwargs)
+            if auto_subplot:
+                plt.subplot(1,2,1)
+                plt.imshow(image.gray.data, cmap=plt.cm.gray, **kwargs)
+                plt.axis('off')
+                plt.subplot(1,2,2)
+                plt.imshow(image.depth.data, cmap=plt.cm.gray_r, **kwargs)
+            else:
+                plt.imshow(image.gray.data, cmap=plt.cm.gray, **kwargs)
         plt.axis('off')
 
     @staticmethod
