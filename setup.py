@@ -7,7 +7,7 @@ from setuptools import setup
 requirements = [
     'numpy',
     'matplotlib',
-    'mayavi',
+    #'meshrender'
 ]
 setup(name='visualization',
       version='0.1.0',

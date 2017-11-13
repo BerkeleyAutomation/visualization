@@ -1,17 +1,16 @@
 """
 Common 3D visualizations
-Author: Jeff Mahler
+Author: Matthew Matl and Jeff Mahler
 """
-import numpy as np
+import uuid
 
-try:
-    import mayavi.mlab as mlab
-except ImportError:
-    print "Could not import Mayavi! Visualizer will not be working."
+import numpy as np
+import trimesh
+from trimesh import Trimesh
 
 from autolab_core import RigidTransform
-from autolab_core import BagOfPoints, Point, PointCloud, RgbPointCloud, NormalCloud
-from meshpy import Mesh3D, Sdf3D, StablePose
+from autolab_core import BagOfPoints, Point
+from meshrender import Scene, SceneObject, InstancedSceneObject, AmbientLight, SceneViewer, MaterialProperties
 
 class Visualizer3D:
     """
@@ -19,64 +18,80 @@ class Visualizer3D:
     The interface is styled after pyplot.
     Should be thought of as a namespace rather than a class.
     """
+    _scene = Scene(background_color=np.array([1.0, 1.0, 1.0]))
+    _init_size = np.array([640,480])
+    _init_kwargs = None
+
 
     @staticmethod
-    def figure(bgcolor=(1,1,1), size=(1000,1000), *args, **kwargs):
+    def figure(bgcolor=(1,1,1), size=(1000,1000), **kwargs):
         """ Creates a figure.
 
         Parameters
         ----------
-        bgcolor : 3-tuple
-           color of the background with values in [0,1] e.g. (1,1,1) = white
-        size : 2-tuple
-           size of the view window in pixels
-        args : list
-           args of mayavi figure
+        bgcolor : (3,) float
+           Color of the background with values in [0,1].
+        size : (2,) int
+           Width and height of the figure in pixels.
         kwargs : list
-           keyword args of mayavi figure
+           keyword args for scene viewer.
         """
-        return mlab.figure(bgcolor=bgcolor, size=size, *args, **kwargs)
-    
+        Visualizer3D._scene = Scene(background_color=np.array(bgcolor))
+        Visualizer3D._scene.ambient_light = AmbientLight(color=[1.0, 1.0, 1.0], strength=1.0)
+        Visualizer3D._init_size = np.array(size)
+        Visualizer3D._init_kwargs = kwargs
+
+
     @staticmethod
-    def show(animate=False, az=0.5, delay=10):
+    def show(animate=False, az=0.05, rate=30, axis=None, clf=True):
         """ Displays a figure and enables interaction.
 
         Parameters
         ----------
         animate : bool
-            whether or not to animate the scene
+            Whether or not to animate the scene.
         az : float (optional)
-            the azimuth to rotate for each animation
-        delay : float (optional)
-            the amount of delay between subsequent frames
+            The azimuth to rotate for each animation timestep.
+        rate : float (optional)
+            The frame rate at which to animate motion.
+        axis : (3,) float or None
+            If present, the animation will rotate about the given axis in world coordinates.
+            Otherwise, the animation will rotate in azimuth.
+        clf : bool
+            If true, the Visualizer is cleared after showing the figure.
         """
-        if animate:
-            @mlab.animate(delay=delay)
-            def anim():
-                f = mlab.gcf()
-                while f.scene is not None:
-                    f.scene.camera.azimuth(az)
-                    f.scene.render()
-                    yield
-            a = anim()
-        mlab.show()
+        SceneViewer(Visualizer3D._scene,
+                    size=Visualizer3D._init_size,
+                    raymond_lighting=True,
+                    bad_normals=True,
+                    animate=animate,
+                    animate_az=az,
+                    animate_rate=rate,
+                    animate_axis=axis)
+
+        if clf:
+            Visualizer3D.clf()
+
 
     @staticmethod
     def clf():
         """ Clear the current figure
         """
-        mlab.clf()
+        Visualizer3D._scene = Scene(background_color=Visualizer3D._scene.background_color)
+        Visualizer3D._scene.ambient_light = AmbientLight(color=[1.0, 1.0, 1.0], strength=1.0)
+
 
     @staticmethod
     def close(*args, **kwargs):
         """ Close the current figure
         """
-        mlab.close(*args, **kwargs)
+        pass
+
 
     @staticmethod
     def points(points, T_points_world=None, color=(0,1,0), scale=0.01, subsample=None, random=False):
         """ Scatters a point cloud in pose T_points_world.
-        
+
         Parameters
         ----------
         points : :obj:`autolab_core.BagOfPoints`
@@ -92,10 +107,10 @@ class Visualizer3D:
         """
         if not isinstance(points, BagOfPoints) and points.dim == 3:
             raise ValueError('Data type %s not supported' %(type(points)))
-                                 
+
         if subsample is not None:
             points = points.subsample(subsample, random=random)
-     
+
         # transform into world frame
         if points.frame != 'world':
             if T_points_world is None:
@@ -103,100 +118,36 @@ class Visualizer3D:
             points_world = T_points_world * points
         else:
             points_world = points
+
         point_data = points_world.data
         if len(point_data.shape) == 1:
             point_data = point_data[:,np.newaxis]
-        mv_obj = mlab.points3d(point_data[0,:], point_data[1,:], point_data[2,:],
-                              color=color, scale_factor=scale)
-        return mv_obj
+        point_data = point_data.T
 
-    @staticmethod
-    def normals(normals, points, T_normals_world=None, color=(0,1,0), scale=0.01, length=1.0, subsample=None):
-        """ Scatters a point cloud with surface normals in pose T_normals_world.
-        
-        Parameters
-        ----------
-        normals : :obj:`autolab_core.NormalCloud`
-            normal cloud to visualize
-        points : :obj:`autolab_core.BagOfPoints`
-            set of points where the normals are rooted (must have the same number of elements as normals)
-        T_normals_world : :obj:`autolab_core.RigidTransform`
-            pose of points and surface normals, specified as a transformation from normals frame to world frame
-        color : 3-tuple
-            color tuple
-        scale : float
-            scale of each point
-        length : float
-            length of each rendered surface normal
-        subsample : int
-            parameter of subsampling to display fewer points
-        """
-        if not isinstance(normals, NormalCloud):
-            raise ValueError('Normals data type %s not supported' %(type(normals)))
-        if points.num_points != normals.num_points:
-            raise ValueError('Points and normals must be the same size')
+        mp = MaterialProperties(
+            color = np.array(color),
+            k_a = 0.5,
+            k_d = 0.3,
+            k_s = 0.0,
+            alpha = 10.0,
+            smooth=True
+        )
 
-        if not isinstance(points, BagOfPoints) and points.dim == 3:
-            raise ValueError('Data type %s not supported' %(type(points)))
-        if normals.frame != points.frame:
-            raise ValueError('Points and normals must have the same shape')            
-        if subsample is not None:
-            normals = normals.subsample(subsample)
-            points = points.subsample(subsample)
-     
-        # transform into world frame
-        if normals.frame != 'world':
-            if T_normals_world is None:
-                T_normals_world = RigidTransform(from_frame=normals.frame, to_frame='world')
-            normals_world = T_normals_world * normals
-            points_world = T_normals_world * points
-        else:
-            normals_world = normals
-            points_world = points
+        # For each point, create a sphere of the specified color and size.
+        sphere = trimesh.creation.uv_sphere(scale, [20, 20])
+        poses = []
+        for point in point_data:
+            poses.append(RigidTransform(translation=point, from_frame='obj', to_frame='world'))
+        obj = InstancedSceneObject(sphere, poses, material=mp)
+        name = str(uuid.uuid4())
+        Visualizer3D._scene.add_object(name, obj)
 
-        # plot
-        normal_data = length * normals_world.data
-        point_data = points_world.data
-        mv_obj = mlab.quiver3d(point_data[0,:], point_data[1,:], point_data[2,:],
-                               normal_data[0,:], normal_data[1,:], normal_data[2,:],
-                               color=color, scale_factor=scale)
-        return mv_obj
-
-    @staticmethod
-    def surface(points, triangles, T_points_world=None,
-                color=(0,1,0), style='surface'):
-        """ Triangulates a surface specified as a set of points and triangles.
-        
-        Parameters
-        ----------
-        points : :obj:`autolab_core.BagOfPoints`
-            point set to visualize
-        triangles : Nx3 :obj:`numpy.ndarray`
-            set of N triangles specified as triplets of integer indices in the points array
-        T_points_world : :obj:`autolab_core.RigidTransform`
-            pose of points, specified as a transformation from point frame to world frame
-        color : 3-tuple
-            color tuple
-        style : :obj:`str`
-            triangular mesh style, see Mayavi docs
-        """
-        if not isinstance(points, BagOfPoints) and points.dim == 3:
-            ValueError('Data type %s not supported' %(type(points)))
-        if T_points_world is None:
-            T_points_world = RigidTransform(from_frame=points.frame, to_frame='world')
-
-        # transform into world frame
-        points_world = T_points_world * points
-        point_data = points_world.data
-        mv_obj = mlab.triangular_mesh(point_data[0,:], point_data[1,:], point_data[2,:],
-                                      triangles, representation=style, color=color)
-        return mv_obj
 
     @staticmethod
     def mesh(mesh, T_mesh_world=RigidTransform(from_frame='obj', to_frame='world'),
-             style='wireframe', color=(0.5,0.5,0.5), opacity=1.0):
+             style='wireframe', smooth=False, color=(0.5,0.5,0.5)):
         """ Visualizes a 3D triangular mesh.
-        
+
         Parameters
         ----------
         mesh : :obj:`meshpy.Mesh3D`
@@ -210,26 +161,31 @@ class Visualizer3D:
         opacity : float
             how opaque to render the surface
         """
-        if not isinstance(mesh, Mesh3D):
-            raise ValueError('Must provide a meshpy.Mesh3D object')
-        vertex_cloud = PointCloud(mesh.vertices.T, frame=T_mesh_world.from_frame)
-        vertex_cloud_tf = T_mesh_world * vertex_cloud
-        vertices = vertex_cloud_tf.data.T
-        surface = mlab.triangular_mesh(vertices[:,0],
-                                       vertices[:,1],
-                                       vertices[:,2],
-                                       mesh.triangles,
-                                       representation=style,
-                                       color=color, opacity=opacity)
-        return surface
+        if not isinstance(mesh, Trimesh):
+            raise ValueError('Must provide a trimesh.Trimesh object')
+
+        mp = MaterialProperties(
+            color = np.array(color),
+            k_a = 0.5,
+            k_d = 0.3,
+            k_s = 0.1,
+            alpha = 10.0,
+            smooth=smooth,
+            wireframe=(style == 'wireframe')
+        )
+
+        obj = SceneObject(mesh, T_mesh_world, mp)
+        name = str(uuid.uuid4())
+        Visualizer3D._scene.add_object(name, obj)
+
 
     @staticmethod
-    def mesh_stable_pose(mesh, stable_pose,
+    def mesh_stable_pose(mesh, T_obj_table,
                          T_table_world=RigidTransform(from_frame='table', to_frame='world'),
-                         style='wireframe', color=(0.5,0.5,0.5),
-                         opacity=1.0, dim=0.15, plot_table=True, vis_com=False):
+                         style='wireframe', smooth=False, color=(0.5,0.5,0.5),
+                         dim=0.15, plot_table=True):
         """ Visualizes a 3D triangular mesh.
-        
+
         Parameters
         ----------
         mesh : :obj:`meshpy.Mesh3D`
@@ -246,102 +202,27 @@ class Visualizer3D:
             how opaque to render the surface
         dim : float
             the dimension of the table
-        plot_table : bool
-            whether or not to plot the table
-        vis_com : bool
-            whether or not to visualize the center of mass
 
         Returns
         -------
         :obj:`autolab_core.RigidTransform`
             pose of the mesh in world frame
         """
-        if not isinstance(stable_pose, StablePose):
-            raise ValueError('Must provide a meshpy.StablePose object')
-        T_stp_obj = RigidTransform(rotation=stable_pose.r, from_frame='obj', to_frame='stp')
-        T_obj_table = mesh.get_T_surface_obj(T_stp_obj).as_frames('obj', 'table')
+        T_obj_table = T_obj_table.as_frames('obj', 'table')
         T_obj_world = T_table_world * T_obj_table
 
-        Visualizer3D.mesh(mesh, T_obj_world, style=style, color=color, opacity=opacity)
+        Visualizer3D.mesh(mesh, T_obj_world, style=style, smooth=smooth, color=color)
         if plot_table:
             Visualizer3D.table(T_table_world, dim=dim)
-        if vis_com:
-            Visualizer3D.points(Point(mesh.center_of_mass, 'obj'), T_obj_world, scale=0.01)
+        Visualizer3D.points(Point(mesh.center_mass, 'obj'), T_obj_world, scale=0.01)
         return T_obj_world
-
-    @staticmethod
-    def mesh_table(mesh, T_obj_table,
-                   T_table_world=RigidTransform(from_frame='table', to_frame='world'),
-                   style='wireframe', color=(0.5,0.5,0.5),
-                   opacity=1.0, dim=0.15, plot_table=True):
-        """ Visualizes a 3D triangular mesh.
-        
-        Parameters
-        ----------
-        mesh : :obj:`meshpy.Mesh3D`
-            mesh to visualize
-        T_mesh_table : :obj:`autolab_core.RigidTransform`
-            pose of mesh wrt table (rotation only)
-        T_table_world : :obj:`autolab_core.RigidTransform`
-            pose of table, specified as a transformation from mesh frame to world frame
-        style : :obj:`str`
-            triangular mesh style, see Mayavi docs
-        color : 3-tuple
-            color tuple
-        opacity : float
-            how opaque to render the surface
-        dim : float
-            the dimension of the table
-
-        Returns
-        -------
-        :obj:`autolab_core.RigidTransform`
-            pose of the mesh in world frame
-        """
-        if not isinstance(T_obj_table, RigidTransform):
-            raise ValueError('Must provide an autolab_core.RigidTransform object')
-        T_obj_table = mesh.get_T_surface_obj(T_obj_table).as_frames('obj', 'table')
-        T_obj_world = T_table_world * T_obj_table
-
-        Visualizer3D.mesh(mesh, T_obj_world, style=style, color=color, opacity=opacity)
-        if plot_table:
-            Visualizer3D.table(T_table_world, dim=dim)
-        return T_obj_world
-
-    @staticmethod
-    def sdf(sdf, T_sdf_world=RigidTransform(from_frame='obj', to_frame='world'),
-             color=(0.5,0.5,0.5), scale=0.01, subsample=1, random=False):
-        """ Visualizes points on the surface of a 3D signed distance field (SDF)
-        
-        Parameters
-        ----------
-        sdf : :obj:`meshpy.Sdf3D`
-            sdf to visualize
-        T_sdf_world : :obj:`autolab_core.RigidTransform`
-            pose of sdf, specified as a transformation from sdf frame to world frame
-        color : 3-tuple
-            color tuple
-        scale : float
-            scale of the points
-        subsample : int
-            rate to subsample the point cloud
-        random : bool
-            whether or not to subsample points randomly
-        """
-        if not isinstance(sdf, Sdf3D):
-            raise ValueError('Must provide a meshpy.Sdf3D object')
-        points, _ = sdf.surface_points(grid_basis=False) 
-        point_cloud = PointCloud(points.T, frame=T_sdf_world.from_frame)
-        return Visualizer3D.points(point_cloud, T_points_world=T_sdf_world,
-                                   color=color, scale=scale, subsample=subsample,
-                                   random=random)
 
 
     @staticmethod
     def pose(T_frame_world, alpha=0.1, tube_radius=0.005, center_scale=0.01,
              show_frame=False):
         """ Plots a pose with frame label.
-        
+
         Parameters
         ----------
         T_frame_world : :obj:`autolab_core.RigidTransform`
@@ -361,20 +242,18 @@ class Visualizer3D:
         x_axis_tf = np.array([t, t + alpha * R[:,0]])
         y_axis_tf = np.array([t, t + alpha * R[:,1]])
         z_axis_tf = np.array([t, t + alpha * R[:,2]])
-                
-        mlab.points3d(t[0], t[1], t[2], color=(1,1,1), scale_factor=center_scale)
-            
-        mlab.plot3d(x_axis_tf[:,0], x_axis_tf[:,1], x_axis_tf[:,2], color=(1,0,0), tube_radius=tube_radius)
-        mlab.plot3d(y_axis_tf[:,0], y_axis_tf[:,1], y_axis_tf[:,2], color=(0,1,0), tube_radius=tube_radius)
-        mlab.plot3d(z_axis_tf[:,0], z_axis_tf[:,1], z_axis_tf[:,2], color=(0,0,1), tube_radius=tube_radius)
 
-        if show_frame:
-            mlab.text3d(t[0], t[1], t[2], ' %s' %T_frame_world.from_frame.upper(), scale=0.01, color=(0,0,0))
+        center = Point(t, 'obj')
+        Visualizer3D.points(center, color=(1,1,1), scale=center_scale)
+
+        Visualizer3D.plot3d(x_axis_tf, color=(1,0,0), tube_radius=tube_radius)
+        Visualizer3D.plot3d(y_axis_tf, color=(0,1,0), tube_radius=tube_radius)
+        Visualizer3D.plot3d(z_axis_tf, color=(0,0,1), tube_radius=tube_radius)
 
     @staticmethod
     def table(T_table_world=RigidTransform(from_frame='table', to_frame='world'), dim=0.16, color=(0,0,0)):
         """ Plots a table of dimension dim in pose T_table_world.
-        
+
         Parameters
         ----------
         T_table_world : :obj:`autolab_core.RigidTransform`
@@ -384,60 +263,67 @@ class Visualizer3D:
         color : 3-tuple
             color of table
         """
+
         table_vertices = np.array([[ dim,  dim, 0],
                                    [ dim, -dim, 0],
                                    [-dim,  dim, 0],
-                                   [-dim, -dim, 0]]).T.astype('float')
-        points_table = PointCloud(table_vertices, frame=T_table_world.from_frame)
-        points_world = T_table_world * points_table
+                                   [-dim, -dim, 0]]).astype('float')
         table_tris = np.array([[0, 1, 2], [1, 2, 3]])
-        Visualizer3D.surface(points_world, table_tris, color=color)
+        table_mesh = Trimesh(table_vertices, table_tris)
+        table_mesh.apply_transform(T_table_world.matrix)
+        Visualizer3D.mesh(table_mesh, style='surface', smooth=True, color=color)
 
     @staticmethod
-    def view(azimuth=None, elevation=None, distance=None, focalpoint=None):
-        """ Set the camera viewpoint.
-        
-        Parameters
-        ----------
-        azimuth : float
-            azimuth of the camera in spherical coordinates
-        elevation : float
-            elevation of the camera in spherical coordinates
-        distance : float
-            distance of camera to the focalpoint
-        focalpoint : 3-tuple of float
-            point to center the camera on
-        """
-        mlab.view(azimuth=azimuth, elevation=elevation, distance=distance, focalpoint=focalpoint)
-
-    @staticmethod
-    def set_offscreen(toggle):
-        """ Set offscreen rendering mode.
+    def plot3d(points, color=(0.5, 0.5, 0.5), tube_radius=0.005):
+        """Plot a 3d curve through a set of points using tubes.
 
         Parameters
         ----------
-        toggle : bool
-            whether or not to render offscreen
+        points : (n,3) float
+            A series of 3D points that define a curve in space.
+        color : (3,) float
+            The color of the tube.
+        tube_radius : float
+            Radius of tube representing curve.
+        Note
+        ----
+        TODO for this -- change to instanced scene object, need to have similarity TF that
+        can scale anisotropically.
         """
-        mlab.options.offscreen = toggle
+        mp = MaterialProperties(
+            color = np.array(color),
+            k_a = 0.5,
+            k_d = 0.3,
+            k_s = 0.0,
+            alpha = 10.0,
+            smooth=True
+        )
+        for i in range(len(points) - 1):
+            p0 = points[i]
+            p1 = points[i+1]
 
-    @staticmethod
-    def savefig(*args, **kwargs):
-        """ Save a given figure.
+            length = np.linalg.norm(p1 - p0)
+            center = p0 + (p1 - p0) / 2.0
+            z = (p1 - p0) / length
+            x = np.array([z[1], -z[0], 0])
+            xl = np.linalg.norm(x)
+            if xl == 0:
+                x = np.array([1.0, 0.0, 0.0])
+            else:
+                x = x / xl
+            y = np.cross(z, x)
+            y = y / np.linalg.norm(y)
 
-        Parameters
-        ----------
-        filename : :obj:`str`
-            filename to save image to
-        """
-        mlab.savefig(*args, **kwargs)
+            R = np.array([x, y, z])
 
-    @staticmethod
-    def axes():
-        """ Plot the x,y,z axes. """
-        mlab.axes()
+            M = np.eye(4)
+            M[:3,:3] = R.T
+            M[:3,3] = center
 
-    @staticmethod
-    def text(*args, **kwargs):
-        """ Plot text. """
-        mlab.text(*args, **kwargs)
+            # Generate a cylinder between p0 and p1
+            cyl = trimesh.creation.cylinder(radius=tube_radius, height=length, transform=M)
+
+            # For each point, create a sphere of the specified color and size.
+            obj = SceneObject(cyl, material=mp)
+            name = str(uuid.uuid4())
+            Visualizer3D._scene.add_object(name, obj)
