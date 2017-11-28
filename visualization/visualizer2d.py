@@ -110,7 +110,6 @@ class Visualizer2D:
     @staticmethod
     def imshow(image, auto_subplot=False, **kwargs):
         """ Displays an image.
-
         Parameters
         ----------
         image : :obj:`perception.Image`
@@ -132,7 +131,7 @@ class Visualizer2D:
                 plt.subplot(1,2,2)
                 plt.imshow(image.depth.data, cmap=plt.cm.gray_r, **kwargs)
             else:
-                plt.imshow(image.color.data, **kwargs)                
+                plt.imshow(image.color.data, **kwargs)
         elif isinstance(image, GdImage):
             if auto_subplot:
                 plt.subplot(1,2,1)

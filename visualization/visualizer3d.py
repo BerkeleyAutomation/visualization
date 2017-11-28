@@ -142,7 +142,6 @@ class Visualizer3D:
         name = str(uuid.uuid4())
         Visualizer3D._scene.add_object(name, obj)
 
-
     @staticmethod
     def mesh(mesh, T_mesh_world=RigidTransform(from_frame='obj', to_frame='world'),
              style='wireframe', smooth=False, color=(0.5,0.5,0.5)):
@@ -183,7 +182,7 @@ class Visualizer3D:
     def mesh_stable_pose(mesh, T_obj_table,
                          T_table_world=RigidTransform(from_frame='table', to_frame='world'),
                          style='wireframe', smooth=False, color=(0.5,0.5,0.5),
-                         dim=0.15, plot_table=True):
+                         dim=0.15, plot_table=True, plot_com=False):
         """ Visualizes a 3D triangular mesh.
 
         Parameters
@@ -202,6 +201,10 @@ class Visualizer3D:
             how opaque to render the surface
         dim : float
             the dimension of the table
+        plot_table : bool
+            whether or not to plot the table
+        plot_com : bool
+            whether or not to plot the mesh center of mass
 
         Returns
         -------
@@ -214,9 +217,9 @@ class Visualizer3D:
         Visualizer3D.mesh(mesh, T_obj_world, style=style, smooth=smooth, color=color)
         if plot_table:
             Visualizer3D.table(T_table_world, dim=dim)
-        Visualizer3D.points(Point(mesh.center_mass, 'obj'), T_obj_world, scale=0.01)
+        if plot_com:
+            Visualizer3D.points(Point(np.array(mesh.center_mass), 'obj'), T_obj_world, scale=0.01)
         return T_obj_world
-
 
     @staticmethod
     def pose(T_frame_world, alpha=0.1, tube_radius=0.005, center_scale=0.01,
