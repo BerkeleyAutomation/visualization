@@ -43,7 +43,7 @@ class Visualizer3D:
 
 
     @staticmethod
-    def show(animate=False, az=0.05, rate=30, axis=None, clf=True):
+    def show(animate=False, az=0.05, rate=30, axis=[0,0,1], clf=True):
         """ Displays a figure and enables interaction.
 
         Parameters
@@ -144,7 +144,7 @@ class Visualizer3D:
 
     @staticmethod
     def mesh(mesh, T_mesh_world=RigidTransform(from_frame='obj', to_frame='world'),
-             style='wireframe', smooth=False, color=(0.5,0.5,0.5)):
+             style='surface', smooth=False, color=(0.5,0.5,0.5)):
         """ Visualizes a 3D triangular mesh.
 
         Parameters
