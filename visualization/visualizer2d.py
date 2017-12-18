@@ -3,9 +3,6 @@ Common 2D visualizations using pyplot
 Author: Jeff Mahler
 """
 import numpy as np
-
-import IPython
-
 import matplotlib.pyplot as plt
 import matplotlib.tri as mtri
 
