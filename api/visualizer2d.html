@@ -37,7 +37,7 @@
         <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="visualization 0.0.1 documentation" href="../index.html"/>
         <link rel="next" title="3-Dimensional Visualization" href="visualizer3d.html"/>
-        <link rel="prev" title="Installation Instructions" href="../install/install.html"/> 
+        <link rel="prev" title="Python Installation" href="../install/install.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -92,7 +92,8 @@
             
               <p class="caption"><span class="caption-text">Installation Guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/install.html">Python Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/install.html#documentation">Documentation</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API Documentation</span></p>
 <ul class="current">
@@ -170,6 +171,172 @@
 <h2>Visualizer2D<a class="headerlink" href="#visualizer2d" title="Permalink to this headline">¶</a></h2>
 <p>A module with static methods for creating and populating a
 2D figure with objects such as points, lines, boxes, contours, and images.</p>
+<dl class="class">
+<dt id="visualization.Visualizer2D">
+<em class="property">class </em><code class="descclassname">visualization.</code><code class="descname">Visualizer2D</code><a class="headerlink" href="#visualization.Visualizer2D" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="visualization.Visualizer2D.figure">
+<em class="property">static </em><code class="descname">figure</code><span class="sig-paren">(</span><em>size=(8</em>, <em>8)</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#visualization.Visualizer2D.figure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a figure.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>size</strong> (<em>2-tuple</em>) – size of the view window in inches</li>
+<li><strong>args</strong> (<em>list</em>) – args of mayavi figure</li>
+<li><strong>kwargs</strong> (<em>list</em>) – keyword args of mayavi figure</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the current figure</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">pyplot figure</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="visualization.Visualizer2D.show">
+<em class="property">static </em><code class="descname">show</code><span class="sig-paren">(</span><em>filename=None</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#visualization.Visualizer2D.show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show the current figure.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>) – filename to save the image to, for auto-saving</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="visualization.Visualizer2D.clf">
+<em class="property">static </em><code class="descname">clf</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#visualization.Visualizer2D.clf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear the current figure</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="visualization.Visualizer2D.xlim">
+<em class="property">static </em><code class="descname">xlim</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#visualization.Visualizer2D.xlim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the x limits of the current figure</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="visualization.Visualizer2D.ylim">
+<em class="property">static </em><code class="descname">ylim</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#visualization.Visualizer2D.ylim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the y limits the current figure</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="visualization.Visualizer2D.savefig">
+<em class="property">static </em><code class="descname">savefig</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#visualization.Visualizer2D.savefig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the current figure</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="visualization.Visualizer2D.colorbar">
+<em class="property">static </em><code class="descname">colorbar</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#visualization.Visualizer2D.colorbar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a colorbar to the current figure</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="visualization.Visualizer2D.subplot">
+<em class="property">static </em><code class="descname">subplot</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#visualization.Visualizer2D.subplot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a subplot in the current figure</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="visualization.Visualizer2D.title">
+<em class="property">static </em><code class="descname">title</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#visualization.Visualizer2D.title" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a title in the current figure</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="visualization.Visualizer2D.xlabel">
+<em class="property">static </em><code class="descname">xlabel</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#visualization.Visualizer2D.xlabel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an x axis label in the current figure</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="visualization.Visualizer2D.ylabel">
+<em class="property">static </em><code class="descname">ylabel</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#visualization.Visualizer2D.ylabel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an y axis label in the current figure</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="visualization.Visualizer2D.legend">
+<em class="property">static </em><code class="descname">legend</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#visualization.Visualizer2D.legend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a legend for the current figure</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="visualization.Visualizer2D.scatter">
+<em class="property">static </em><code class="descname">scatter</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#visualization.Visualizer2D.scatter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scatters points</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="visualization.Visualizer2D.plot">
+<em class="property">static </em><code class="descname">plot</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#visualization.Visualizer2D.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots lines</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="visualization.Visualizer2D.imshow">
+<em class="property">static </em><code class="descname">imshow</code><span class="sig-paren">(</span><em>image</em>, <em>auto_subplot=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#visualization.Visualizer2D.imshow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Displays an image.
+:param image: image to display
+:type image: <code class="xref py py-obj docutils literal"><span class="pre">perception.Image</span></code>
+:param auto_subplot: whether or not to automatically subplot for multi-channel images e.g. rgbd
+:type auto_subplot: bool</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="visualization.Visualizer2D.box">
+<em class="property">static </em><code class="descname">box</code><span class="sig-paren">(</span><em>b</em>, <em>line_width=2</em>, <em>color=’g’</em>, <em>style=’-‘</em><span class="sig-paren">)</span><a class="headerlink" href="#visualization.Visualizer2D.box" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws a box on the current plot.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>b</strong> (<code class="xref py py-obj docutils literal"><span class="pre">autolab_core.Box</span></code>) – box to draw</li>
+<li><strong>line_width</strong> (<em>int</em>) – width of lines on side of box</li>
+<li><strong>color</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>) – color of box</li>
+<li><strong>style</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>) – style of lines to draw</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="visualization.Visualizer2D.contour">
+<em class="property">static </em><code class="descname">contour</code><span class="sig-paren">(</span><em>c</em>, <em>subsample=1</em>, <em>size=10</em>, <em>color=’g’</em><span class="sig-paren">)</span><a class="headerlink" href="#visualization.Visualizer2D.contour" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws a contour on the current plot by scattering points.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>c</strong> (<code class="xref py py-obj docutils literal"><span class="pre">autolab_core.Contour</span></code>) – contour to draw</li>
+<li><strong>subsample</strong> (<em>int</em>) – subsample rate for boundary pixels</li>
+<li><strong>size</strong> (<em>int</em>) – size of scattered points</li>
+<li><strong>color</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>) – color of box</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 </div>
 
@@ -186,7 +353,7 @@
         <a href="visualizer3d.html" class="btn btn-neutral float-right" title="3-Dimensional Visualization" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../install/install.html" class="btn btn-neutral" title="Installation Instructions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../install/install.html" class="btn btn-neutral" title="Python Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
