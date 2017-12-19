@@ -1,5 +1,5 @@
-Visualization tools for the autolab at UC Berkeley.
-  3D visualization tools are based on Mayavi
-  2D visualization tools are based on matplotlib
+## Visualization tools for the autolab at UC Berkeley.
+
+[![Build Status](https://travis-ci.org/BerkeleyAutomation/visualization.svg?branch=master)](https://travis-ci.org/BerkeleyAutomation/visualization)
 
 Full documentation can be found at: [berkeleyautomation.github.io/visualization.](https://berkeleyautomation.github.io/visualization)
