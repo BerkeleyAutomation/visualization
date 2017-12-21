@@ -7,9 +7,11 @@ import uuid
 import numpy as np
 import trimesh
 from trimesh import Trimesh
+from meshpy import Mesh3D
 
 from autolab_core import RigidTransform, BagOfPoints, Point
 from meshrender import Scene, SceneObject, InstancedSceneObject, AmbientLight, SceneViewer, MaterialProperties
+
 
 class Visualizer3D:
     """
@@ -159,6 +161,9 @@ class Visualizer3D:
         opacity : float
             how opaque to render the surface
         """
+        if isinstance(mesh, Mesh3D):
+            mesh = mesh.trimesh
+
         if not isinstance(mesh, Trimesh):
             raise ValueError('Must provide a trimesh.Trimesh object')
 
