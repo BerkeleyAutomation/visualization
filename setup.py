@@ -6,7 +6,7 @@ from setuptools import setup
 requirements = [
     'numpy',
     'matplotlib',
-    'trimesh',
+    'trimesh[easy]',
     'autolab_core',
     'autolab_perception',
     'meshrender'
