@@ -149,7 +149,7 @@ class Visualizer3D:
 
         Parameters
         ----------
-        mesh : :obj:`meshpy.Mesh3D`
+        mesh : :obj:`trimesh.Trimesh`
             mesh to visualize
         T_mesh_world : :obj:`autolab_core.RigidTransform`
             pose of mesh, specified as a transformation from mesh frame to world frame
@@ -187,7 +187,7 @@ class Visualizer3D:
 
         Parameters
         ----------
-        mesh : :obj:`meshpy.Mesh3D`
+        mesh : :obj:`trimesh.Trimesh`
             mesh to visualize
         stable_pose : :obj:`meshpy.StablePose`
             stable pose to visualize
