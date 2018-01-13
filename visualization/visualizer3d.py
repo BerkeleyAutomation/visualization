@@ -8,8 +8,7 @@ import numpy as np
 import trimesh
 from trimesh import Trimesh
 
-from autolab_core import RigidTransform
-from autolab_core import BagOfPoints, Point
+from autolab_core import RigidTransform, BagOfPoints, Point
 from meshrender import Scene, SceneObject, InstancedSceneObject, AmbientLight, SceneViewer, MaterialProperties
 
 class Visualizer3D:
