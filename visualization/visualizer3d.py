@@ -66,7 +66,8 @@ class Visualizer3D:
                     animate=animate,
                     animate_az=az,
                     animate_rate=rate,
-                    animate_axis=axis)
+                    animate_axis=axis,
+                    **Visualizer3D._init_kwargs)
 
         if clf:
             Visualizer3D.clf()
