@@ -4,9 +4,9 @@ Author: Matthew Matl and Jeff Mahler
 """
 import uuid
 
+import imageio
 import numpy as np
 import trimesh
-from trimesh import Trimesh
 
 from autolab_core import RigidTransform, BagOfPoints, Point
 from meshrender import Scene, SceneObject, InstancedSceneObject, AmbientLight, SceneViewer, MaterialProperties
@@ -71,6 +71,85 @@ class Visualizer3D:
 
         if clf:
             Visualizer3D.clf()
+
+
+    @staticmethod
+    def render(animate=False, az=0.05, rate=30, axis=[0,0,1], n_frames=1):
+        """ Off-screen renders frames from the viewer.
+
+        Parameters
+        ----------
+        animate : bool
+            Whether or not to animate the scene.
+        az : float (optional)
+            The azimuth to rotate for each animation timestep.
+        rate : float (optional)
+            The frame rate at which to animate motion.
+        axis : (3,) float or None
+            If present, the animation will rotate about the given axis in world coordinates.
+            Otherwise, the animation will rotate in azimuth.
+        n_frames : int
+            The number of frames to render
+
+        Returns
+        -------
+        list of perception.ColorImage
+            A list of colorimages rendered from the offscreen scene.
+        """
+        v = SceneViewer(Visualizer3D._scene,
+                    size=Visualizer3D._init_size,
+                    raymond_lighting=True,
+                    bad_normals=True,
+                    animate=animate,
+                    animate_az=az,
+                    animate_rate=rate,
+                    animate_axis=axis,
+                    max_frames=n_frames,
+                    **Visualizer3D._init_kwargs)
+        return v.saved_frames
+
+
+    @staticmethod
+    def save(filename, animate=False, az=0.05, rate=30, axis=[0,0,1], n_frames=1):
+        """ Off-screen renders frames from the viewer.
+
+        Parameters
+        ----------
+        filename : str
+            The filename in which to save the output image. If more than one frame,
+            should have extension .gif.
+        animate : bool
+            Whether or not to animate the scene.
+        az : float (optional)
+            The azimuth to rotate for each animation timestep.
+        rate : float (optional)
+            The frame rate at which to animate motion.
+        axis : (3,) float or None
+            If present, the animation will rotate about the given axis in world coordinates.
+            Otherwise, the animation will rotate in azimuth.
+        n_frames : int
+            The number of frames to render
+
+        Returns
+        -------
+        list of perception.ColorImage
+            A list of colorimages rendered from the offscreen scene.
+        """
+        v = SceneViewer(Visualizer3D._scene,
+                    size=Visualizer3D._init_size,
+                    raymond_lighting=True,
+                    bad_normals=True,
+                    animate=animate,
+                    animate_az=az,
+                    animate_rate=rate,
+                    animate_axis=axis,
+                    max_frames=n_frames,
+                    **Visualizer3D._init_kwargs)
+        data = [m.data for m in v.saved_frames]
+        if len(data) > 1:
+            imageio.mimwrite(filename, data, fps=rate)
+        else:
+            imageio.imwrite(filename, data[0])
 
 
     @staticmethod
@@ -160,7 +239,7 @@ class Visualizer3D:
         opacity : float
             how opaque to render the surface
         """
-        if not isinstance(mesh, Trimesh):
+        if not isinstance(mesh, trimesh.Trimesh):
             raise ValueError('Must provide a trimesh.Trimesh object')
 
         mp = MaterialProperties(
@@ -272,7 +351,7 @@ class Visualizer3D:
                                    [-dim,  dim, 0],
                                    [-dim, -dim, 0]]).astype('float')
         table_tris = np.array([[0, 1, 2], [1, 2, 3]])
-        table_mesh = Trimesh(table_vertices, table_tris)
+        table_mesh = trimesh.Trimesh(table_vertices, table_tris)
         table_mesh.apply_transform(T_table_world.matrix)
         Visualizer3D.mesh(table_mesh, style='surface', smooth=True, color=color)
 

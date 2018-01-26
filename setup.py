@@ -4,6 +4,7 @@ Visualization setup file.
 from setuptools import setup
 
 requirements = [
+    'imageio',
     'numpy',
     'matplotlib',
     'trimesh[easy]',
