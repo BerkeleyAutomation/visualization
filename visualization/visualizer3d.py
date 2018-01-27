@@ -166,9 +166,30 @@ class Visualizer3D:
         """
         pass
 
+    @staticmethod
+    def get_object_keys():
+        """Return the visualizer's object keys.
+
+        Returns
+        -------
+        list of str
+            The keys for the visualizer's objects.
+        """
+        return Visualizer3D._scene.objects.keys()
 
     @staticmethod
-    def points(points, T_points_world=None, color=(0,1,0), scale=0.01, subsample=None, random=False):
+    def get_object(name):
+        """Return a SceneObject corresponding to the given name.
+
+        Returns
+        -------
+        meshrender.SceneObject
+            The corresponding SceneObject.
+        """
+        return Visualizer3D._scene.objects[name]
+
+    @staticmethod
+    def points(points, T_points_world=None, color=(0,1,0), scale=0.01, subsample=None, random=False, name=None):
         """ Scatters a point cloud in pose T_points_world.
 
         Parameters
@@ -183,6 +204,8 @@ class Visualizer3D:
             scale of each point
         subsample : int
             parameter of subsampling to display fewer points
+        name : str
+            A name for the object to be added.
         """
         if not isinstance(points, BagOfPoints) and points.dim == 3:
             raise ValueError('Data type %s not supported' %(type(points)))
@@ -218,12 +241,13 @@ class Visualizer3D:
         for point in point_data:
             poses.append(RigidTransform(translation=point, from_frame='obj', to_frame='world'))
         obj = InstancedSceneObject(sphere, poses, material=mp)
-        name = str(uuid.uuid4())
+        if name is None:
+            name = str(uuid.uuid4())
         Visualizer3D._scene.add_object(name, obj)
 
     @staticmethod
     def mesh(mesh, T_mesh_world=RigidTransform(from_frame='obj', to_frame='world'),
-             style='surface', smooth=False, color=(0.5,0.5,0.5)):
+             style='surface', smooth=False, color=(0.5,0.5,0.5), name=None):
         """ Visualizes a 3D triangular mesh.
 
         Parameters
@@ -238,6 +262,8 @@ class Visualizer3D:
             color tuple
         opacity : float
             how opaque to render the surface
+        name : str
+            A name for the object to be added.
         """
         if not isinstance(mesh, trimesh.Trimesh):
             raise ValueError('Must provide a trimesh.Trimesh object')
@@ -253,7 +279,8 @@ class Visualizer3D:
         )
 
         obj = SceneObject(mesh, T_mesh_world, mp)
-        name = str(uuid.uuid4())
+        if name is None:
+            name = str(uuid.uuid4())
         Visualizer3D._scene.add_object(name, obj)
 
 
@@ -261,7 +288,7 @@ class Visualizer3D:
     def mesh_stable_pose(mesh, T_obj_table,
                          T_table_world=RigidTransform(from_frame='table', to_frame='world'),
                          style='wireframe', smooth=False, color=(0.5,0.5,0.5),
-                         dim=0.15, plot_table=True, plot_com=False):
+                         dim=0.15, plot_table=True, plot_com=False, name=None):
         """ Visualizes a 3D triangular mesh.
 
         Parameters
@@ -284,6 +311,8 @@ class Visualizer3D:
             whether or not to plot the table
         plot_com : bool
             whether or not to plot the mesh center of mass
+        name : str
+            A name for the object to be added.
 
         Returns
         -------
@@ -293,7 +322,7 @@ class Visualizer3D:
         T_obj_table = T_obj_table.as_frames('obj', 'table')
         T_obj_world = T_table_world * T_obj_table
 
-        Visualizer3D.mesh(mesh, T_obj_world, style=style, smooth=smooth, color=color)
+        Visualizer3D.mesh(mesh, T_obj_world, style=style, smooth=smooth, color=color, name=name)
         if plot_table:
             Visualizer3D.table(T_table_world, dim=dim)
         if plot_com:
