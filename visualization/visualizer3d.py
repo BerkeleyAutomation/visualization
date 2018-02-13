@@ -18,8 +18,9 @@ class Visualizer3D:
     Should be thought of as a namespace rather than a class.
     """
     _scene = Scene(background_color=np.array([1.0, 1.0, 1.0]))
+    _scene.ambient_light = AmbientLight(color=[1.0, 1.0, 1.0], strength=1.0)
     _init_size = np.array([640,480])
-    _init_kwargs = None
+    _init_kwargs = {}
 
 
     @staticmethod
