@@ -112,7 +112,7 @@ class Visualizer3D:
 
     @staticmethod
     def save(filename, animate=False, az=0.05, rate=30, axis=[0,0,1], n_frames=1):
-        """ Off-screen renders frames from the viewer.
+        """ Off-screen saves frames from the viewer.
 
         Parameters
         ----------
@@ -130,11 +130,6 @@ class Visualizer3D:
             Otherwise, the animation will rotate in azimuth.
         n_frames : int
             The number of frames to render
-
-        Returns
-        -------
-        list of perception.ColorImage
-            A list of colorimages rendered from the offscreen scene.
         """
         v = SceneViewer(Visualizer3D._scene,
                     size=Visualizer3D._init_size,
@@ -152,6 +147,26 @@ class Visualizer3D:
         else:
             imageio.imwrite(filename, data[0])
 
+    @staticmethod
+    def save_loop(filename, framerate=30, time=3.0, axis=[0,0,1]):
+        """ Off-screen saves a full continuous loop GIF.
+
+        Parameters
+        ----------
+        filename : str
+            The filename in which to save the output image.
+            should have extension .gif.
+        framerate : int (optional)
+            The frame rate at which to animate motion.
+        time : float (optional)
+            The number of seconds for one rotation.
+        axis : (3,) float or None
+            If present, the animation will rotate about the given axis in world coordinates.
+            Otherwise, the animation will rotate in azimuth.
+        """
+        n_frames = framerate * time
+        az = 2.0 * np.pi / n_frames
+        Visualizer3D.save(filename, animate=True, az=az, rate=framerate, axis=axis, n_frames=n_frames)
 
     @staticmethod
     def clf():
