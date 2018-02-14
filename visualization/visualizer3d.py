@@ -148,7 +148,7 @@ class Visualizer3D:
                     **Visualizer3D._init_kwargs)
         data = [m.data for m in v.saved_frames]
         if len(data) > 1:
-            imageio.mimwrite(filename, data, fps=rate)
+            imageio.mimwrite(filename, data, fps=rate, palettesize=128, subrectangles=True)
         else:
             imageio.imwrite(filename, data[0])
 
