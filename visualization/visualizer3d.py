@@ -3,12 +3,15 @@ Common 3D visualizations
 Author: Matthew Matl and Jeff Mahler
 """
 import uuid
+import copy
+import os
 
 import imageio
 import numpy as np
 import trimesh
+from shapely.geometry import Polygon
 
-from autolab_core import RigidTransform, BagOfPoints, Point
+from autolab_core import RigidTransform, BagOfPoints, Point, PointCloud
 from meshrender import Scene, SceneObject, InstancedSceneObject, AmbientLight, SceneViewer, MaterialProperties
 
 class Visualizer3D:
@@ -20,12 +23,12 @@ class Visualizer3D:
     _scene = Scene(background_color=np.array([1.0, 1.0, 1.0]))
     _scene.ambient_light = AmbientLight(color=[1.0, 1.0, 1.0], strength=1.0)
     _init_size = np.array([640,480])
-    _init_kwargs = {}
+    _save_directory = None
 
 
     @staticmethod
-    def figure(bgcolor=(1,1,1), size=(1000,1000), **kwargs):
-        """ Creates a figure.
+    def figure(bgcolor=(1,1,1), size=(1000,1000)):
+        """Create a blank figure.
 
         Parameters
         ----------
@@ -33,144 +36,138 @@ class Visualizer3D:
            Color of the background with values in [0,1].
         size : (2,) int
            Width and height of the figure in pixels.
-        kwargs : list
-           keyword args for scene viewer.
         """
         Visualizer3D._scene = Scene(background_color=np.array(bgcolor))
         Visualizer3D._scene.ambient_light = AmbientLight(color=[1.0, 1.0, 1.0], strength=1.0)
         Visualizer3D._init_size = np.array(size)
-        Visualizer3D._init_kwargs = kwargs
 
 
     @staticmethod
-    def show(animate=False, az=0.05, rate=30, axis=[0,0,1], clf=True):
-        """ Displays a figure and enables interaction.
+    def show(animate=False, axis=np.array([0.,0.,1.]), clf=True, **kwargs):
+        """Display the current figure and enable interaction.
 
         Parameters
         ----------
         animate : bool
             Whether or not to animate the scene.
-        az : float (optional)
-            The azimuth to rotate for each animation timestep.
-        rate : float (optional)
-            The frame rate at which to animate motion.
         axis : (3,) float or None
             If present, the animation will rotate about the given axis in world coordinates.
             Otherwise, the animation will rotate in azimuth.
         clf : bool
             If true, the Visualizer is cleared after showing the figure.
+        kwargs : dict
+            Other keyword arguments for the SceneViewer instance.
         """
-        SceneViewer(Visualizer3D._scene,
-                    size=Visualizer3D._init_size,
-                    raymond_lighting=True,
-                    bad_normals=True,
-                    animate=animate,
-                    animate_az=az,
-                    animate_rate=rate,
-                    animate_axis=axis,
-                    **Visualizer3D._init_kwargs)
-
+        x = SceneViewer(Visualizer3D._scene,
+                        size=Visualizer3D._init_size,
+                        animate=animate,
+                        animate_axis=axis,
+                        save_directory=Visualizer3D._save_directory,
+                        **kwargs)
+        if x.save_directory:
+            Visualizer3D._save_directory = x.save_directory
         if clf:
             Visualizer3D.clf()
 
 
     @staticmethod
-    def render(animate=False, az=0.05, rate=30, axis=[0,0,1], n_frames=1):
-        """ Off-screen renders frames from the viewer.
+    def render(n_frames=1, axis=np.array([0.,0.,1.]), clf=True, **kwargs):
+        """Render frames from the viewer.
 
         Parameters
         ----------
-        animate : bool
-            Whether or not to animate the scene.
-        az : float (optional)
-            The azimuth to rotate for each animation timestep.
-        rate : float (optional)
-            The frame rate at which to animate motion.
+        n_frames : int
+            Number of frames to render. If more than one, the scene will animate.
         axis : (3,) float or None
             If present, the animation will rotate about the given axis in world coordinates.
             Otherwise, the animation will rotate in azimuth.
-        n_frames : int
-            The number of frames to render
+        clf : bool
+            If true, the Visualizer is cleared after rendering the figure.
+        kwargs : dict
+            Other keyword arguments for the SceneViewer instance.
 
         Returns
         -------
         list of perception.ColorImage
-            A list of colorimages rendered from the offscreen scene.
+            A list of ColorImages rendered from the viewer.
         """
         v = SceneViewer(Visualizer3D._scene,
-                    size=Visualizer3D._init_size,
-                    raymond_lighting=True,
-                    bad_normals=True,
-                    animate=animate,
-                    animate_az=az,
-                    animate_rate=rate,
-                    animate_axis=axis,
-                    max_frames=n_frames,
-                    **Visualizer3D._init_kwargs)
+                        size=Visualizer3D._init_size,
+                        animate=(n_frames > 1),
+                        animate_axis=axis,
+                        max_frames=n_frames,
+                        **kwargs)
+
+        if clf:
+            Visualizer3D.clf()
+
         return v.saved_frames
 
 
     @staticmethod
-    def save(filename, animate=False, az=0.05, rate=30, axis=[0,0,1], n_frames=1):
-        """ Off-screen saves frames from the viewer.
+    def save(filename, n_frames=1, axis=np.array([0.,0.,1.]), clf=True, **kwargs):
+        """Save frames from the viewer out to a file.
 
         Parameters
         ----------
         filename : str
             The filename in which to save the output image. If more than one frame,
             should have extension .gif.
-        animate : bool
-            Whether or not to animate the scene.
-        az : float (optional)
-            The azimuth to rotate for each animation timestep.
-        rate : float (optional)
-            The frame rate at which to animate motion.
+        n_frames : int
+            Number of frames to render. If more than one, the scene will animate.
         axis : (3,) float or None
             If present, the animation will rotate about the given axis in world coordinates.
             Otherwise, the animation will rotate in azimuth.
-        n_frames : int
-            The number of frames to render
+        clf : bool
+            If true, the Visualizer is cleared after rendering the figure.
+        kwargs : dict
+            Other keyword arguments for the SceneViewer instance.
         """
+        if n_frames >1 and os.path.splitext(filename)[1] != '.gif':
+            raise ValueError('Expected .gif file for multiple-frame save.')
         v = SceneViewer(Visualizer3D._scene,
-                    size=Visualizer3D._init_size,
-                    raymond_lighting=True,
-                    bad_normals=True,
-                    animate=animate,
-                    animate_az=az,
-                    animate_rate=rate,
-                    animate_axis=axis,
-                    max_frames=n_frames,
-                    **Visualizer3D._init_kwargs)
+                        size=Visualizer3D._init_size,
+                        animate=(n_frames > 1),
+                        animate_axis=axis,
+                        max_frames=n_frames,
+                        **kwargs)
         data = [m.data for m in v.saved_frames]
         if len(data) > 1:
-            imageio.mimwrite(filename, data, fps=rate, palettesize=128, subrectangles=True)
+            imageio.mimwrite(filename, data, fps=v._animate_rate, palettesize=128, subrectangles=True)
         else:
             imageio.imwrite(filename, data[0])
 
+        if clf:
+            Visualizer3D.clf()
+
     @staticmethod
-    def save_loop(filename, framerate=30, time=3.0, axis=[0,0,1]):
-        """ Off-screen saves a full continuous loop GIF.
+    def save_loop(filename, framerate=30, time=3.0, axis=np.array([0.,0.,1.]), clf=True, **kwargs):
+        """Off-screen save a GIF of one rotation about the scene.
 
         Parameters
         ----------
         filename : str
-            The filename in which to save the output image.
-            should have extension .gif.
-        framerate : int (optional)
+            The filename in which to save the output image (should have extension .gif)
+        framerate : int
             The frame rate at which to animate motion.
-        time : float (optional)
+        time : float
             The number of seconds for one rotation.
         axis : (3,) float or None
             If present, the animation will rotate about the given axis in world coordinates.
             Otherwise, the animation will rotate in azimuth.
+        clf : bool
+            If true, the Visualizer is cleared after rendering the figure.
+        kwargs : dict
+            Other keyword arguments for the SceneViewer instance.
         """
         n_frames = framerate * time
         az = 2.0 * np.pi / n_frames
-        Visualizer3D.save(filename, animate=True, az=az, rate=framerate, axis=axis, n_frames=n_frames)
+        Visualizer3D.save(filename, n_frames=n_frames, axis=axis, clf=clf,
+                          animate_rate=framerate, animate_az=az)
 
     @staticmethod
     def clf():
-        """ Clear the current figure
+        """Clear the current figure
         """
         Visualizer3D._scene = Scene(background_color=Visualizer3D._scene.background_color)
         Visualizer3D._scene.ambient_light = AmbientLight(color=[1.0, 1.0, 1.0], strength=1.0)
@@ -178,7 +175,7 @@ class Visualizer3D:
 
     @staticmethod
     def close(*args, **kwargs):
-        """ Close the current figure
+        """Close the current figure
         """
         pass
 
@@ -206,25 +203,37 @@ class Visualizer3D:
 
     @staticmethod
     def points(points, T_points_world=None, color=(0,1,0), scale=0.01, subsample=None, random=False, name=None):
-        """ Scatters a point cloud in pose T_points_world.
+        """Scatter a point cloud in pose T_points_world.
 
         Parameters
         ----------
-        points : :obj:`autolab_core.BagOfPoints`
-            point set to visualize
-        T_points_world : :obj:`autolab_core.RigidTransform`
-            pose of points, specified as a transformation from point frame to world frame
+        points : autolab_core.BagOfPoints or (n,3) float
+            The point set to visualize.
+        T_points_world : autolab_core.RigidTransform
+            Pose of points, specified as a transformation from point frame to world frame.
         color : 3-tuple
-            color tuple
+            Color tuple.
         scale : float
-            scale of each point
+            Radius of each point.
         subsample : int
-            parameter of subsampling to display fewer points
+            Parameter of subsampling to display fewer points.
         name : str
             A name for the object to be added.
         """
-        if not isinstance(points, BagOfPoints) and points.dim == 3:
-            raise ValueError('Data type %s not supported' %(type(points)))
+        if isinstance(points, BagOfPoints):
+            if points.dim != 3:
+                raise ValueError('BagOfPoints must have dimension 3xN!')
+        else:
+            if type(points) is not np.ndarray:
+                raise ValueError('Points visualizer expects BagOfPoints or numpy array!')
+            if len(points.shape) == 1:
+                points = points[:,np.newaxis].T
+            if len(points.shape) != 2 or points.shape[1] != 3:
+                raise ValueError('Numpy array of points must have dimension (N,3)')
+            frame = 'points'
+            if T_points_world:
+                frame = T_points_world.from_frame
+            points = PointCloud(points.T, frame=frame)
 
         if subsample is not None:
             points = points.subsample(subsample, random=random)
@@ -264,20 +273,20 @@ class Visualizer3D:
     @staticmethod
     def mesh(mesh, T_mesh_world=RigidTransform(from_frame='obj', to_frame='world'),
              style='surface', smooth=False, color=(0.5,0.5,0.5), name=None):
-        """ Visualizes a 3D triangular mesh.
+        """Visualize a 3D triangular mesh.
 
         Parameters
         ----------
-        mesh : :obj:`trimesh.Trimesh`
-            mesh to visualize
-        T_mesh_world : :obj:`autolab_core.RigidTransform`
-            pose of mesh, specified as a transformation from mesh frame to world frame
-        style : :obj:`str`
-            triangular mesh style, see Mayavi docs
+        mesh : trimesh.Trimesh
+            The mesh to visualize.
+        T_mesh_world : autolab_core.RigidTransform
+            The pose of the mesh, specified as a transformation from mesh frame to world frame.
+        style : str
+            Triangular mesh style, either 'surface' or 'wireframe'.
+        smooth : bool
+            If true, the mesh is smoothed before rendering.
         color : 3-tuple
-            color tuple
-        opacity : float
-            how opaque to render the surface
+            Color tuple.
         name : str
             A name for the object to be added.
         """
@@ -305,35 +314,35 @@ class Visualizer3D:
                          T_table_world=RigidTransform(from_frame='table', to_frame='world'),
                          style='wireframe', smooth=False, color=(0.5,0.5,0.5),
                          dim=0.15, plot_table=True, plot_com=False, name=None):
-        """ Visualizes a 3D triangular mesh.
+        """Visualize a mesh in a stable pose.
 
         Parameters
         ----------
-        mesh : :obj:`trimesh.Trimesh`
-            mesh to visualize
-        stable_pose : :obj:`meshpy.StablePose`
-            stable pose to visualize
-        T_table_world : :obj:`autolab_core.RigidTransform`
-            pose of table, specified as a transformation from mesh frame to world frame
-        style : :obj:`str`
-            triangular mesh style, see Mayavi docs
+        mesh : trimesh.Trimesh
+            The mesh to visualize.
+        T_obj_table : autolab_core.RigidTransform
+            Pose of object relative to table.
+        T_table_world : autolab_core.RigidTransform
+            Pose of table relative to world.
+        style : str
+            Triangular mesh style, either 'surface' or 'wireframe'.
+        smooth : bool
+            If true, the mesh is smoothed before rendering.
         color : 3-tuple
-            color tuple
-        opacity : float
-            how opaque to render the surface
+            Color tuple.
         dim : float
-            the dimension of the table
+            The side-length for the table.
         plot_table : bool
-            whether or not to plot the table
+            If true, a table is visualized as well.
         plot_com : bool
-            whether or not to plot the mesh center of mass
+            If true, a ball is visualized at the object's center of mass.
         name : str
             A name for the object to be added.
 
         Returns
         -------
-        :obj:`autolab_core.RigidTransform`
-            pose of the mesh in world frame
+        autolab_core.RigidTransform
+            The pose of the mesh in world frame.
         """
         T_obj_table = T_obj_table.as_frames('obj', 'table')
         T_obj_world = T_table_world * T_obj_table
@@ -346,22 +355,19 @@ class Visualizer3D:
         return T_obj_world
 
     @staticmethod
-    def pose(T_frame_world, alpha=0.1, tube_radius=0.005, center_scale=0.01,
-             show_frame=False):
-        """ Plots a pose with frame label.
+    def pose(T_frame_world, alpha=0.1, tube_radius=0.005, center_scale=0.01):
+        """Plot a 3D pose as a set of axes (x red, y green, z blue).
 
         Parameters
         ----------
-        T_frame_world : :obj:`autolab_core.RigidTransform`
-            pose specified as a transformation from the poses frame to the world frame
+        T_frame_world : autolab_core.RigidTransform
+            The pose relative to world coordinates.
         alpha : float
-            length of plotted x,y,z axes
+            Length of plotted x,y,z axes.
         tube_radius : float
-            radius of plotted x,y,z axes
+            Radius of plotted x,y,z axes.
         center_scale : float
-            scale of the pose's origin
-        show_frame : bool
-            whether to show the frame name in text
+            Radius of the pose's origin ball.
         """
         R = T_frame_world.rotation
         t = T_frame_world.translation
@@ -370,25 +376,23 @@ class Visualizer3D:
         y_axis_tf = np.array([t, t + alpha * R[:,1]])
         z_axis_tf = np.array([t, t + alpha * R[:,2]])
 
-        center = Point(t, 'obj')
-        Visualizer3D.points(center, color=(1,1,1), scale=center_scale)
-
+        Visualizer3D.points(t, color=(1,1,1), scale=center_scale)
         Visualizer3D.plot3d(x_axis_tf, color=(1,0,0), tube_radius=tube_radius)
         Visualizer3D.plot3d(y_axis_tf, color=(0,1,0), tube_radius=tube_radius)
         Visualizer3D.plot3d(z_axis_tf, color=(0,0,1), tube_radius=tube_radius)
 
     @staticmethod
     def table(T_table_world=RigidTransform(from_frame='table', to_frame='world'), dim=0.16, color=(0,0,0)):
-        """ Plots a table of dimension dim in pose T_table_world.
+        """Plot a table mesh in 3D.
 
         Parameters
         ----------
-        T_table_world : :obj:`autolab_core.RigidTransform`
-            pose of the table in world frame
+        T_table_world : autolab_core.RigidTransform
+            Pose of table relative to world.
         dim : float
-            the dimensions of the table
+            The side-length for the table.
         color : 3-tuple
-            color of table
+            Color tuple.
         """
 
         table_vertices = np.array([[ dim,  dim, 0],
@@ -401,7 +405,7 @@ class Visualizer3D:
         Visualizer3D.mesh(table_mesh, style='surface', smooth=True, color=color)
 
     @staticmethod
-    def plot3d(points, color=(0.5, 0.5, 0.5), tube_radius=0.005):
+    def plot3d(points, color=(0.5, 0.5, 0.5), tube_radius=0.005, n_components=30, name=None):
         """Plot a 3d curve through a set of points using tubes.
 
         Parameters
@@ -412,10 +416,10 @@ class Visualizer3D:
             The color of the tube.
         tube_radius : float
             Radius of tube representing curve.
-        Note
-        ----
-        TODO for this -- change to instanced scene object, need to have similarity TF that
-        can scale anisotropically.
+        n_components : int
+            The number of edges in each polygon representing the tube.
+        name : str
+            A name for the object to be added.
         """
         mp = MaterialProperties(
             color = np.array(color),
@@ -425,32 +429,23 @@ class Visualizer3D:
             alpha = 10.0,
             smooth=True
         )
-        for i in range(len(points) - 1):
-            p0 = points[i]
-            p1 = points[i+1]
 
-            length = np.linalg.norm(p1 - p0)
-            center = p0 + (p1 - p0) / 2.0
-            z = (p1 - p0) / length
-            x = np.array([z[1], -z[0], 0])
-            xl = np.linalg.norm(x)
-            if xl == 0:
-                x = np.array([1.0, 0.0, 0.0])
-            else:
-                x = x / xl
-            y = np.cross(z, x)
-            y = y / np.linalg.norm(y)
+        # Generate circular polygon
+        vec = np.array([0,1]) * tube_radius
+        angle = np.pi * 2.0 / n_components
+        rotmat = np.array([
+            [np.cos(angle), -np.sin(angle)],
+            [np.sin(angle), np.cos(angle)]
+        ])
+        perim = []
+        for i in range(n_components):
+            perim.append(vec)
+            vec = np.dot(rotmat, vec)
+        poly = Polygon(perim)
 
-            R = np.array([x, y, z])
-
-            M = np.eye(4)
-            M[:3,:3] = R.T
-            M[:3,3] = center
-
-            # Generate a cylinder between p0 and p1
-            cyl = trimesh.creation.cylinder(radius=tube_radius, height=length, transform=M)
-
-            # For each point, create a sphere of the specified color and size.
-            obj = SceneObject(cyl, material=mp)
+        # Sweep it out along the path
+        mesh = trimesh.creation.sweep_polygon(poly, points)
+        obj = SceneObject(mesh, material=mp)
+        if name is None:
             name = str(uuid.uuid4())
-            Visualizer3D._scene.add_object(name, obj)
+        Visualizer3D._scene.add_object(name, obj)
