@@ -421,6 +421,7 @@ class Visualizer3D:
         name : str
             A name for the object to be added.
         """
+        points = np.asanyarray(points)
         mp = MaterialProperties(
             color = np.array(color),
             k_a = 0.5,
