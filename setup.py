@@ -8,7 +8,6 @@ requirements = [
     'numpy',
     'matplotlib',
     'trimesh[easy]',
-    'meshpy',
     'autolab_core',
     'autolab_perception',
     'meshrender'
@@ -43,6 +42,9 @@ setup(
             'sphinx',
             'sphinxcontrib-napoleon',
             'sphinx_rtd_theme'
+        ],
+        'full' : [
+            'meshpy',
         ],
     }
 )
