@@ -7,7 +7,8 @@ requirements = [
     'imageio',
     'numpy',
     'matplotlib',
-    'trimesh[all]',
+    'trimesh[easy]',
+    'meshpy',
     'autolab_core',
     'autolab_perception',
     'meshrender'
