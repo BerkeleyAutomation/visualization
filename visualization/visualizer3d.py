@@ -162,7 +162,7 @@ class Visualizer3D:
         """
         n_frames = framerate * time
         az = 2.0 * np.pi / n_frames
-        Visualizer3D.save(filename, n_frames=n_frames, axis=axis, clf=clf,
+        Visualizer3D.save(filename, max_frames=n_frames, axis=axis, clf=clf,
                           animate_rate=framerate, animate_az=az)
 
     @staticmethod
