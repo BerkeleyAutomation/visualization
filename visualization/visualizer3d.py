@@ -202,7 +202,7 @@ class Visualizer3D:
         return Visualizer3D._scene.objects[name]
 
     @staticmethod
-    def points(points, T_points_world=None, color=(0,1,0), scale=0.01, subsample=None, random=False, name=None):
+    def points(points, T_points_world=None, color=np.array([0,1,0]), scale=0.01, n_cuts=20, subsample=None, random=False, name=None):
         """Scatter a point cloud in pose T_points_world.
 
         Parameters
@@ -211,10 +211,12 @@ class Visualizer3D:
             The point set to visualize.
         T_points_world : autolab_core.RigidTransform
             Pose of points, specified as a transformation from point frame to world frame.
-        color : 3-tuple
-            Color tuple.
+        color : (3,) or (n,3) float
+            Color of whole cloud or per-point colors
         scale : float
             Radius of each point.
+        n_cuts : int
+            Number of longitude/latitude lines on sphere points.
         subsample : int
             Parameter of subsampling to display fewer points.
         name : str
@@ -236,7 +238,10 @@ class Visualizer3D:
             points = PointCloud(points.T, frame=frame)
 
         if subsample is not None:
-            points = points.subsample(subsample, random=random)
+            num_points = points.num_points
+            points, inds = points.subsample(subsample, random=random)
+            if color.shape[0] == num_points and color.shape[1] == 3:
+                color = color[inds,:]
 
         # transform into world frame
         if points.frame != 'world':
@@ -251,8 +256,11 @@ class Visualizer3D:
             point_data = point_data[:,np.newaxis]
         point_data = point_data.T
 
+        mpcolor = color
+        if len(color.shape) > 1:
+            mpcolor = color[0]
         mp = MaterialProperties(
-            color = np.array(color),
+            color = np.array(mpcolor),
             k_a = 0.5,
             k_d = 0.3,
             k_s = 0.0,
@@ -261,11 +269,14 @@ class Visualizer3D:
         )
 
         # For each point, create a sphere of the specified color and size.
-        sphere = trimesh.creation.uv_sphere(scale, [20, 20])
-        poses = []
-        for point in point_data:
-            poses.append(RigidTransform(translation=point, from_frame='obj', to_frame='world'))
-        obj = InstancedSceneObject(sphere, poses, material=mp)
+        sphere = trimesh.creation.uv_sphere(scale, [n_cuts, n_cuts])
+        raw_pose_data = np.tile(np.eye(4), (points.num_points, 1))
+        raw_pose_data[3::4, :3] = points.data.T
+
+        instcolor = None
+        if color.shape[0] == points.num_points and color.shape[1] == 3:
+            instcolor = color
+        obj = InstancedSceneObject(sphere, raw_pose_data=raw_pose_data, colors=instcolor, material=mp)
         if name is None:
             name = str(uuid.uuid4())
         Visualizer3D._scene.add_object(name, obj)
