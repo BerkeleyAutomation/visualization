@@ -237,6 +237,7 @@ class Visualizer3D:
                 frame = T_points_world.from_frame
             points = PointCloud(points.T, frame=frame)
 
+        color = np.array(color)
         if subsample is not None:
             num_points = points.num_points
             points, inds = points.subsample(subsample, random=random)
