@@ -50,6 +50,11 @@ class Visualizer2D:
         plt.clf(*args, **kwargs)
 
     @staticmethod
+    def gca(*args, **kwargs):
+        """ Get the current axes """
+        return plt.gca(*args, **kwargs)
+        
+    @staticmethod
     def xlim(*args, **kwargs):
         """ Set the x limits of the current figure """
         plt.xlim(*args, **kwargs)
@@ -79,6 +84,11 @@ class Visualizer2D:
         """ Creates a title in the current figure """
         plt.title(*args, **kwargs)
 
+    @staticmethod
+    def suptitle(*args, **kwargs):
+        """ Creates a title in the current figure """
+        plt.suptitle(*args, **kwargs)
+        
     @staticmethod
     def xlabel(*args, **kwargs):
         """ Creates an x axis label in the current figure """
@@ -201,3 +211,91 @@ class Visualizer2D:
         for i in range(c.num_pixels)[0::subsample]:
             plt.scatter(c.boundary_pixels[i,1], c.boundary_pixels[i,0], s=size, c=color)
 
+    @staticmethod
+    def grasp(grasp, width=None, color='r', arrow_len=4, arrow_head_len = 2, arrow_head_width = 3,
+              arrow_width = 1, jaw_len=3, jaw_width = 1.0,
+              grasp_center_size=1, grasp_center_thickness=2.5,
+              grasp_center_style='+', grasp_axis_width=1,
+              grasp_axis_style='--', line_width=1.0, show_center=True, show_axis=False, scale=1.0):
+        """
+        Plots a 2D grasp with arrow and jaw style using matplotlib
+        
+        Parameters
+        ----------
+        grasp : :obj:`Grasp2D`
+            2D grasp to plot
+        width : float
+            width, in pixels, of the grasp (overrides Grasp2D.width_px)
+        color : :obj:`str`
+            color of plotted grasp
+        arrow_len : float
+            length of arrow body
+        arrow_head_len : float
+            length of arrow head
+        arrow_head_width : float
+            width of arrow head
+        arrow_width : float
+            width of arrow body
+        jaw_len : float
+            length of jaw line
+        jaw_width : float
+            line width of jaw line
+        grasp_center_thickness : float
+            thickness of grasp center
+        grasp_center_style : :obj:`str`
+            style of center of grasp
+        grasp_axis_width : float
+            line width of grasp axis
+        grasp_axis_style : :obj:`str`
+            style of grasp axis line
+        show_center : bool
+            whether or not to plot the grasp center
+        show_axis : bool
+            whether or not to plot the grasp axis
+        """
+        # set vars for suction
+        skip_jaws = False
+        if not hasattr(grasp, 'width'):
+            grasp_center_style = '.'
+            grasp_center_size = 25
+            plt.scatter(grasp.center.x, grasp.center.y, c=color, marker=grasp_center_style, s=scale*grasp_center_size)
+            return
+
+        # plot grasp center
+        if show_center:
+            plt.plot(grasp.center.x, grasp.center.y, c=color, marker=grasp_center_style, mew=scale*grasp_center_thickness, ms=scale*grasp_center_size)
+        if skip_jaws:
+            return
+        
+        # compute axis and jaw locations
+        axis = grasp.axis
+        width_px = width
+        if width_px is None and hasattr(grasp, 'width_px'):
+            width_px = grasp.width_px
+        g1 = grasp.center.data - (float(width_px) / 2) * axis
+        g2 = grasp.center.data + (float(width_px) / 2) * axis
+        g1p = g1 - scale * arrow_len * axis # start location of grasp jaw 1
+        g2p = g2 + scale * arrow_len * axis # start location of grasp jaw 2
+
+        # plot grasp axis
+        if show_axis:
+            plt.plot([g1[0], g2[0]], [g1[1], g2[1]], color=color, linewidth=scale*grasp_axis_width, linestyle=grasp_axis_style)
+        
+        # direction of jaw line
+        jaw_dir = scale * jaw_len * np.array([axis[1], -axis[0]])
+        
+        # length of arrow
+        alpha = scale*(arrow_len - arrow_head_len)
+        
+        # plot first jaw
+        g1_line = np.c_[g1p, g1 - scale*arrow_head_len*axis].T
+        plt.arrow(g1p[0], g1p[1], alpha*axis[0], alpha*axis[1], width=scale*arrow_width, head_width=scale*arrow_head_width, head_length=scale*arrow_head_len, fc=color, ec=color)
+        jaw_line1 = np.c_[g1 + jaw_dir, g1 - jaw_dir].T
+
+        plt.plot(jaw_line1[:,0], jaw_line1[:,1], linewidth=scale*jaw_width, c=color) 
+
+        # plot second jaw
+        g2_line = np.c_[g2p, g2 + scale*arrow_head_len*axis].T
+        plt.arrow(g2p[0], g2p[1], -alpha*axis[0], -alpha*axis[1], width=scale*arrow_width, head_width=scale*arrow_head_width, head_length=scale*arrow_head_len, fc=color, ec=color)
+        jaw_line2 = np.c_[g2 + jaw_dir, g2 - jaw_dir].T
+        plt.plot(jaw_line2[:,0], jaw_line2[:,1], linewidth=scale*jaw_width, c=color) 
