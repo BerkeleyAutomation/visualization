@@ -164,6 +164,8 @@ class Visualizer3D:
         az = 2.0 * np.pi / n_frames
         Visualizer3D.save(filename, n_frames=n_frames, axis=axis, clf=clf,
                           animate_rate=framerate, animate_az=az)
+        if clf:
+            Visualizer3D.clf()
 
     @staticmethod
     def clf():
