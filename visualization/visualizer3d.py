@@ -277,7 +277,7 @@ class Visualizer3D:
         raw_pose_data[3::4, :3] = points.data.T
 
         instcolor = None
-        if color.shape[0] == points.num_points and color.shape[1] == 3:
+        if color.ndim == 2 and color.shape[0] == points.num_points and color.shape[1] == 3:
             instcolor = color
         obj = InstancedSceneObject(sphere, raw_pose_data=raw_pose_data, colors=instcolor, material=mp)
         if name is None:
