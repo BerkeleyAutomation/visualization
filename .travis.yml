@@ -1,36 +1,30 @@
 language: python
 sudo: required
 dist: trusty
-
 python:
-    - '2.7'
-    - '3.5'
-    - '3.6'
-
+- '2.7'
+- '3.5'
+- '3.6'
 before_install:
-    - pip install --upgrade pip setuptools wheel
-    - pip install --only-binary=numpy,scipy numpy scipy
-    - pip install PyOpenGL
-
+- pip install --upgrade pip setuptools wheel
+- pip install --only-binary=numpy,scipy numpy scipy
+- pip install PyOpenGL
 install:
-    - pip install .
-    - pip install nose2
-
+- pip install .
+- pip install nose2
 script:
-    - cd tests
-    - nose2
-    - cd ..
-
+- cd tests
+- nose2
+- cd ..
 deploy:
-    provider: pypi
-    skip_existing: true
-    user: mmatl
-    on:
-        tags: true
-        branch: master
-    password:
-        secure: Zks6/mtDu984++mr5JTIY6s9f+fUk4/TTZCEj3tcHhNuI7js1bv3gLWLRcrTCb2pzbb2Wwe7MrNHSbIeBYCqgxc9BZswj8oyA76pvy6lNDPrQNZSIbRE9NukxSM3Xs8QFrfRp0bKrZRe7qd8FgLBtucIKZoUil2WJreJUjeYFrMLtvYotbRZALvvT7nBow1D4jIcUYJ50QnFY6hdLXXRG/0gfkUJqRWZWOIszW3tKcTKsrFggpMIttKmgBms8kf3Zifywr22erLnywjIsLS/QSDfXJ7QL+hl/vBdnPnIEnVBuievF1GrvrMqcAu5OQYwcMAKsHG/TenWUFbLkDPdEb/5b8HjiSS45t9GqpmM0pSTsFhwvMkHpVS0/Ks/6rXgOL/iQpJCpOzJ+A3GEOqwaguFubgdUey/LBpDpm5fA1vBrAs+PRamUujP0/NGJnO0+U02gchmcBuQQZvH/xnnmqpjdxCvgaB/P6fF+ejU2pCnTxuV2TCmk17Q8X81RsqU1o3cc6pKN2VNtV4r1kVRr0gnDnWKJnd2fTKrzKshioMPyak9KckMviSTrIScYVxe0vyMHDyWxVGaV3KrWXSNkDx+w9XbK4Ra8q0nP656fFIW0QYf76Ud6a9Y4G841s/YE6C1qledJNN+BAbcLw14YltOu1bwwmp5yk/z/A4WmUk=
-    distributions: sdist bdist_wheel
-
+  provider: pypi
+  skip_existing: true
+  user: mmatl
+  on:
+    tags: true
+    branch: master
+  password:
+    secure: bxB0FL5Y4OjlUgS/Ug5ifsdT6HRSD/SKuC2Tyoxyo+W2e9Js3CBgPDyvwl+3TzAbaShU9Vxf1Mt5DU6/PfMXnzHYwYf8JNUpv1otlbku1Qd3MvfuNQtGQvzKxGAz0sB/xJeAMd0hslv5BqlHVQqPrI6YPgTwQFSyFpJbpnAGxFezXz5dqcEZ8Qezmj/MusLtZVYZR4CEM75WG9WqBFGUN9grTQCGan8vTKg7uCX8vFsw788SKxKc/PpG9kwZ3Nez9HfcMxi71HDxWXzUiOPHYBg6WafRMIuawJgO0bf5VCNtdN3P5eagxBTeJKYKBBEEiTPrf3ckOSDtaZQxAF/md93GGwcAutkQJ91rQnac5WnW18C2b9Lu3F82yarOEHw+/1ljhj419PfzkALhqiAq5BIt9jlHbeMzWN6ixbRXGxuv70Ej4PrXGo2m0qNhMWgPfs5eIVqajGXwBVJ4eF9sjohEioesjLZ78ZR8v8EyKwZB0P+Zl+vKPcOU+wVxHJeW3MuWS81Lqf9AbotCAvGdNelE9bDgd4vdcm554BB2aEkAy+6Ph4OLGFcOPsGwuK2V5FSgeT6worAD5oWTph0tIzT3N8iECy0xf3jpRtR73GK550RG54DdWkHDmobaR8yQ4XiwJsdVZZcP/SUHeOWYtZb9tRG3CJetpIJ1v/wbnYQ=
+  distributions: sdist bdist_wheel
 notifications:
-    email: false
+  email: false
