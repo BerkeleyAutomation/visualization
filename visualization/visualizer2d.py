@@ -257,8 +257,15 @@ class Visualizer2D:
         skip_jaws = False
         if not hasattr(grasp, 'width'):
             grasp_center_style = '.'
-            grasp_center_size = 25
+            grasp_center_size = 50
             plt.scatter(grasp.center.x, grasp.center.y, c=color, marker=grasp_center_style, s=scale*grasp_center_size)
+
+            if hasattr(grasp, 'orientation'):
+                alpha = 5
+                axis = np.array([np.cos(grasp.angle), np.sin(grasp.angle)])
+                p = grasp.center.data + alpha * axis
+                line = np.c_[grasp.center.data, p]
+                plt.plot(line[0,:], line[1,:], color=color, linewidth=scale*grasp_axis_width)
             return
 
         # plot grasp center
