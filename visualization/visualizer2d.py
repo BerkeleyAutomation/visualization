@@ -216,7 +216,7 @@ class Visualizer2D:
               arrow_width = 1, jaw_len=3, jaw_width = 1.0,
               grasp_center_size=1, grasp_center_thickness=2.5,
               grasp_center_style='+', grasp_axis_width=1,
-              grasp_axis_style='--', line_width=1.0, show_center=True, show_axis=False, scale=1.0):
+              grasp_axis_style='--', line_width=1.0, alpha=50, show_center=True, show_axis=False, scale=1.0):
         """
         Plots a 2D grasp with arrow and jaw style using matplotlib
         
@@ -261,11 +261,11 @@ class Visualizer2D:
             plt.scatter(grasp.center.x, grasp.center.y, c=color, marker=grasp_center_style, s=scale*grasp_center_size)
 
             if hasattr(grasp, 'orientation'):
-                alpha = 5
                 axis = np.array([np.cos(grasp.angle), np.sin(grasp.angle)])
                 p = grasp.center.data + alpha * axis
                 line = np.c_[grasp.center.data, p]
                 plt.plot(line[0,:], line[1,:], color=color, linewidth=scale*grasp_axis_width)
+                plt.scatter(p[0], p[1], c=color, marker=grasp_center_style, s=scale*grasp_center_size)
             return
 
         # plot grasp center
