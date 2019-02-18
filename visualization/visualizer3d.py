@@ -4,6 +4,7 @@ Author: Matthew Matl and Jeff Mahler
 """
 import uuid
 import copy
+import logging
 import os
 
 import imageio
@@ -12,7 +13,11 @@ import trimesh
 from shapely.geometry import Polygon
 
 from autolab_core import RigidTransform, BagOfPoints, Point, PointCloud
-from meshrender import Scene, SceneObject, InstancedSceneObject, AmbientLight, SceneViewer, MaterialProperties
+
+try:
+    from meshrender import Scene, SceneObject, InstancedSceneObject, AmbientLight, SceneViewer, MaterialProperties
+except Exception:
+    logging.warning('Cannot import OpenGL, 3D visualization is disabled')
 
 class Visualizer3D:
     """
