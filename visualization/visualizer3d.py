@@ -167,7 +167,7 @@ class Visualizer3D:
         """
         n_frames = framerate * time
         az = 2.0 * np.pi / n_frames
-        Visualizer3D.save(filename, max_frames=n_frames, axis=axis, clf=clf,
+        Visualizer3D.save(filename, n_frames=n_frames, axis=axis, clf=clf,
                           animate_rate=framerate, animate_az=az)
         if clf:
             Visualizer3D.clf()
@@ -279,7 +279,7 @@ class Visualizer3D:
         # For each point, create a sphere of the specified color and size.
         sphere = trimesh.creation.uv_sphere(scale, [n_cuts, n_cuts])
         raw_pose_data = np.tile(np.eye(4), (points.num_points, 1))
-        raw_pose_data[3::4, :3] = points.data.T
+        raw_pose_data[3::4, :3] = point_data
 
         instcolor = None
         if color.ndim == 2 and color.shape[0] == points.num_points and color.shape[1] == 3:
