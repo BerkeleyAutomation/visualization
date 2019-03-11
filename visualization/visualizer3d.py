@@ -4,6 +4,7 @@ Author: Matthew Matl and Jeff Mahler
 """
 import uuid
 import copy
+import logging
 import os
 
 import imageio
@@ -12,6 +13,7 @@ import trimesh
 from shapely.geometry import Polygon
 
 from autolab_core import RigidTransform, BagOfPoints, Point, PointCloud
+
 from meshrender import Scene, SceneObject, InstancedSceneObject, AmbientLight, SceneViewer, MaterialProperties
 
 class Visualizer3D:
