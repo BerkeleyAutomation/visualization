@@ -6,7 +6,7 @@ from setuptools import setup
 requirements = [
     'imageio',
     'numpy',
-    'matplotlib',
+    'matplotlib<=2.2.0',
     'trimesh[easy]',
     'autolab_core',
     'autolab_perception',
