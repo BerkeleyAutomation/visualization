@@ -46,7 +46,7 @@ class Visualizer3D(object):
         """Show a grasp by visualizing the gripper in its pose.
         """
         Visualizer3D.mesh(grasp.gripper.geometry, pose=grasp.pose, color=gripper_color)
-        f or tooltip, pose in zip(grasp.gripper.tooltips, grasp.gripper.tooltip_poses):
+        for tooltip, pose in zip(grasp.gripper.tooltips, grasp.gripper.tooltip_poses):
             Visualizer3D.mesh(tooltip.geometry, pose=grasp.pose.dot(pose), color=tooltip_color)
 
     @staticmethod
