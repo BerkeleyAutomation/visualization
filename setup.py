@@ -10,7 +10,7 @@ requirements = [
     'trimesh[easy]',
     'autolab_core',
     'autolab_perception',
-    'meshrender'
+    'pyrender'
 ]
 
 exec(open('visualization/version.py').read())
@@ -22,7 +22,7 @@ setup(
     description = 'Visualization toolkit for the Berkeley AutoLab.',
     long_description = 'Visualization toolkit for the Berkeley AutoLab.',
     author = 'Matthew Matl',
-    author_email = 'mmatl@eevs.berkeley.edu',
+    author_email = 'mmatl@eecs.berkeley.edu',
     license = 'Apache Software License',
     url = 'https://github.com/BerkeleyAutomation/visualization',
     keywords = 'robotics visualization rendering 3D',
@@ -42,9 +42,6 @@ setup(
             'sphinx',
             'sphinxcontrib-napoleon',
             'sphinx_rtd_theme'
-        ],
-        'full' : [
-            'meshpy',
-        ],
+        ]
     }
 )

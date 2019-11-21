@@ -14,7 +14,6 @@ class Visualizer3D(object):
     Should be thought of as a namespace rather than a class.
 
     """
-
     _scene = Scene(bg_color=np.ones(3))
     _size = np.array([640, 480])
     _kwargs = {}
@@ -56,7 +55,7 @@ class Visualizer3D(object):
         animate : bool
             Whether or not to animate the scene.
         kwargs : dict
-            Other keyword arguments for the SceneViewer instance.
+            Other keyword arguments for the Viewer instance.
         """
         Visualizer3D._kwargs.update({'rotate': animate,
                                      'run_in_thread': asynch})
@@ -127,8 +126,8 @@ class Visualizer3D(object):
         Parameters
         ----------
         kwargs : dict
-            Other keyword arguments for the Viewer instance."""
-
+            Other keyword arguments for the Viewer instance.
+        """
         if 'use_raymond_lighting' not in kwargs:
             kwargs['use_raymond_lighting'] = True
         viewer = Viewer(Visualizer3D._scene, viewport_size=Visualizer3D._size, **kwargs)
@@ -189,18 +188,18 @@ class Visualizer3D(object):
         ----------
         points : (n,3) float
             The point set to visualize.
+        name : str
+            A name for the object to be added.
         T_points_world : autolab_core.RigidTransform
             Pose of points, specified as a transformation from point frame to world frame.
         color : (3,) or (n,3) float
             Color of whole cloud or per-point colors
         material:
             Material of mesh
-        scale : float
-            Radius of each point.
         n_cuts : int
             Number of longitude/latitude lines on sphere points.
-        name : str
-            A name for the object to be added.
+        scale : float
+            Radius of each point.
         """
         n = Visualizer3D._create_node_from_points(points, name=name, tube_radius=scale,
                             pose=T_points_world, color=color, material=material, n_divs=n_cuts)
@@ -217,16 +216,18 @@ class Visualizer3D(object):
         ----------
         mesh : trimesh.Trimesh
             The mesh to visualize.
+        name : str
+            A name for the object to be added.
         T_mesh_world : autolab_core.RigidTransform
             The pose of the mesh, specified as a transformation from mesh frame to world frame.
         style : str
             Triangular mesh style, either 'surface' or 'wireframe'.
-        smooth : bool
-            If true, the mesh is smoothed before rendering.
         color : 3-tuple
             Color tuple.
-        name : str
-            A name for the object to be added.
+        material:
+            Material of mesh
+        smooth : bool
+            If true, the mesh is smoothed before rendering.
         """
         if not isinstance(mesh, trimesh.Trimesh):
             raise ValueError('Must provide a trimesh.Trimesh object')
@@ -240,7 +241,7 @@ class Visualizer3D(object):
     @staticmethod
     def mesh_stable_pose(mesh, T_obj_table,
                          T_table_world=RigidTransform(from_frame='table', to_frame='world'),
-                         style='surface', smooth=False, color=(0.5,0.5,0.5),
+                         style='surface', smooth=False, color=(0.5,0.5,0.5), material=None,
                          dim=0.15, plot_table=True, plot_com=False, name=None):
         """Visualize a mesh in a stable pose.
 
@@ -258,6 +259,8 @@ class Visualizer3D(object):
             If true, the mesh is smoothed before rendering.
         color : 3-tuple
             Color tuple.
+        material:
+            Material of mesh
         dim : float
             The side-length for the table.
         plot_table : bool
@@ -275,7 +278,7 @@ class Visualizer3D(object):
         T_obj_table = T_obj_table.as_frames('obj', 'table')
         T_obj_world = T_table_world * T_obj_table
 
-        Visualizer3D.mesh(mesh, T_mesh_world=T_obj_world, style=style, smooth=smooth, color=color, name=name)
+        Visualizer3D.mesh(mesh, T_mesh_world=T_obj_world, style=style, smooth=smooth, color=color, material=material, name=name)
         if plot_table:
             Visualizer3D.table(T_table_world, dim=dim)
         if plot_com:
@@ -291,14 +294,20 @@ class Visualizer3D(object):
         ----------
         points : (n,3) float
             A series of 3D points that define a curve in space.
-        color : (3,) float
-            The color of the tube.
         tube_radius : float
             Radius of tube representing curve.
-        n_components : int
-            The number of edges in each polygon representing the tube.
         name : str
             A name for the object to be added.
+        pose : autolab_core.RigidTransform
+            Pose of object relative to world.
+        color : (3,) float
+            The color of the tube.
+        material:
+            Material of mesh
+        n_components : int
+            The number of edges in each polygon representing the tube.
+        smooth : bool
+            If true, the mesh is smoothed before rendering.
         """
         # Generate circular polygon
         vec = np.array([0.0, 1.0]) * tube_radius
@@ -320,14 +329,14 @@ class Visualizer3D(object):
 
 
     @staticmethod
-    def pose(T_frame_world=None, alpha=0.1, tube_radius=0.005, center_scale=0.01):
+    def pose(T_frame_world=None, length=0.1, tube_radius=0.005, center_scale=0.01):
         """Plot a 3D pose as a set of axes (x red, y green, z blue).
 
         Parameters
         ----------
         T_frame_world : autolab_core.RigidTransform
             The pose relative to world coordinates.
-        alpha : float
+        length : float
             Length of plotted x,y,z axes.
         tube_radius : float
             Radius of plotted x,y,z axes.
@@ -340,9 +349,9 @@ class Visualizer3D(object):
         else:
             R = T_frame_world.rotation
             t = T_frame_world.translation
-        x = np.array([t, t + alpha * R[:,0]])
-        y = np.array([t, t + alpha * R[:,1]])
-        z = np.array([t, t + alpha * R[:,2]])
+        x = np.array([t, t + length * R[:,0]])
+        y = np.array([t, t + length * R[:,1]])
+        z = np.array([t, t + length * R[:,2]])
 
         Visualizer3D.points(t, color=(1,1,1), scale=center_scale)
         Visualizer3D.plot3d(x, tube_radius=tube_radius, color=(1,0,0))
@@ -372,6 +381,23 @@ class Visualizer3D(object):
 
     @staticmethod
     def caption(text, location=TextAlign.TOP_RIGHT, font_name='OpenSans-Regular', font_pt=20, color=None, scale=1.0):
+        """Displays text on the visualization.
+
+        Parameters
+        ----------
+        text : str
+            The text to be displayed
+        location : int
+            Enum of location for the text
+        font_name : str
+            Valid font to be used
+        font_pt : int
+            Size of font to be used
+        color : 3-tuple
+            Color tuple.
+        scale : float
+            Scale of text
+        """
         caption_dict = {'text': text,
                         'location': location,
                         'font_name': font_name,
@@ -387,6 +413,7 @@ class Visualizer3D(object):
 
     @staticmethod
     def _create_node_from_mesh(mesh, name=None, pose=None, color=None, material=None, poses=None, wireframe=False, smooth=True):
+        """Helper method that creates a pyrender.Node from a trimesh.Trimesh"""
         # Create default pose
         if pose is None:
             pose = np.eye(4)
@@ -416,6 +443,7 @@ class Visualizer3D(object):
 
     @staticmethod
     def _create_node_from_points(points, name=None, pose=None, color=None, material=None, tube_radius=None, n_divs=20):
+        """Helper method that creates a pyrender.Node from an array of points"""
         points = np.asanyarray(points)
         if points.ndim == 1:
             points = np.array([points])
