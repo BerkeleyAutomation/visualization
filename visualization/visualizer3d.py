@@ -324,8 +324,38 @@ class Visualizer3D(object):
 
         # Sweep it along the path
         mesh = trimesh.creation.sweep_polygon(poly, points)
-
         return Visualizer3D.mesh(mesh, name=name, T_mesh_world=pose, color=color, material=material, smooth=smooth)
+
+
+    @staticmethod
+    def arrow(start_point, direction, tube_radius=0.005, color=(0.5, 0.5, 0.5), material=None, n_components=30, smooth=True):
+        """Plot an arrow with start and end points.
+
+        Parameters
+        ----------
+        start_point : (3,) float
+            Origin point for the arrow
+        direction : (3,) float
+            Vector defining the arrow
+        tube_radius : float
+            Radius of plotted x,y,z axes.
+        color : (3,) float
+            The color of the tube.
+        material:
+            Material of mesh
+        n_components : int
+            The number of edges in each polygon representing the tube.
+        smooth : bool
+            If true, the mesh is smoothed before rendering.
+        """
+        end_point = start_point + direction
+        arrow_head = Visualizer3D._create_arrow_head(length=np.linalg.norm(direction), tube_radius=tube_radius)
+        arrow_head_rot = trimesh.geometry.align_vectors(np.array([0,0,1]), direction)
+        arrow_head_tf = np.matmul(trimesh.transformations.translation_matrix(end_point), arrow_head_rot)
+        
+        vec = np.array([start_point, end_point])
+        Visualizer3D.plot3d(vec, tube_radius=tube_radius, color=color)
+        Visualizer3D.mesh(arrow_head, T_mesh_world=arrow_head_tf, color=color, material=material, smooth=smooth)
 
 
     @staticmethod
@@ -349,14 +379,11 @@ class Visualizer3D(object):
         else:
             R = T_frame_world.rotation
             t = T_frame_world.translation
-        x = np.array([t, t + length * R[:,0]])
-        y = np.array([t, t + length * R[:,1]])
-        z = np.array([t, t + length * R[:,2]])
 
         Visualizer3D.points(t, color=(1,1,1), scale=center_scale)
-        Visualizer3D.plot3d(x, tube_radius=tube_radius, color=(1,0,0))
-        Visualizer3D.plot3d(y, tube_radius=tube_radius, color=(0,1,0))
-        Visualizer3D.plot3d(z, tube_radius=tube_radius, color=(0,0,1))
+        Visualizer3D.arrow(t, length * R[:,0], tube_radius=tube_radius, color=(1,0,0))
+        Visualizer3D.arrow(t, length * R[:,1], tube_radius=tube_radius, color=(0,1,0))
+        Visualizer3D.arrow(t, length * R[:,2], tube_radius=tube_radius, color=(0,0,1))
 
 
     @staticmethod
@@ -471,3 +498,33 @@ class Visualizer3D(object):
             m = Mesh.from_points(points, colors=color)
 
         return Node(mesh=m, name=name, matrix=pose)
+
+    @staticmethod
+    def _create_arrow_head(length=0.1, tube_radius=0.005, n_components=30):
+        
+        radius = tube_radius * 1.5
+        height = length * 0.1
+
+        # create a 2D pie out of wedges
+        theta = np.linspace(0, np.pi * 2, n_components)
+        vertices = np.column_stack((np.sin(theta),
+                                    np.cos(theta), 
+                                    np.zeros(len(theta)))) * radius
+        
+        # the single vertex at the center of the circle
+        # we're overwriting the duplicated start/end vertex
+        # plus add vertex at tip of cone
+        vertices[0] = [0, 0, 0]
+        vertices = np.append(vertices, [[0, 0, height]], axis=0)
+
+        # whangle indexes into a triangulation of the pie wedges
+        index = np.arange(1, len(vertices)).reshape((-1, 1))
+        index[-1] = 1
+        faces_2d = np.tile(index, (1, 2)).reshape(-1)[1:-1].reshape((-1, 2))
+        faces = np.column_stack((np.zeros(len(faces_2d), dtype=np.int), faces_2d))
+
+        # add triangles connecting to vertex above
+        faces = np.append(faces, np.column_stack(((len(faces_2d) + 1) * np.ones(len(faces_2d), dtype=np.int), faces_2d))[:,::-1], axis=0)
+
+        arrow_head = trimesh.Trimesh(faces=faces, vertices=vertices)
+        return arrow_head
