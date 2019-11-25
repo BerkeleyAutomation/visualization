@@ -1,8 +1,13 @@
 """
-Placeholder test cases for meshrender -- hard to test it in CI
-as doing so requires an X display.
+Placeholder test cases for pyrender -- hard to test it in CI
+as doing so requires an X display. Uncomment to test locally.
 """
 import unittest
+
+# import trimesh
+# from visualization import Visualizer3D as vis3d
+# import numpy as np
+# from autolab_core import RigidTransform
 
 class PointsTest(unittest.TestCase):
 
@@ -10,11 +15,6 @@ class PointsTest(unittest.TestCase):
         pass
 
 # class Test3DVis(unittest.TestCase):
-
-#     import trimesh
-#     from visualization import Visualizer3D as vis3d
-#     import numpy as np
-#     from autolab_core import RigidTransform
 
 #     def test_3d_vis(self):
 
