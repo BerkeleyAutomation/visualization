@@ -2,9 +2,15 @@
 Visualization setup file.
 """
 from setuptools import setup
+import sys
+
+def get_imageio_dep():
+    if sys.version[0] == "2":
+        return 'imageio<=2.6.1'
+    return 'imageio'
 
 requirements = [
-    'imageio',
+    get_imageio_dep(),
     'numpy',
     'matplotlib<=2.2.0',
     'trimesh[easy]',
