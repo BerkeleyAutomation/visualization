@@ -6,6 +6,16 @@ python:
 - '3.5'
 - '3.6'
 before_install:
+- sudo apt-get update
+- sudo apt-get install -y curl g++ make
+- pushd ~
+- curl -L http://download.osgeo.org/libspatialindex/spatialindex-src-1.8.5.tar.gz | tar xz
+- cd spatialindex-src-1.8.5
+- ./configure
+- make
+- sudo make install
+- sudo ldconfig
+- popd
 - pip install --upgrade pip setuptools wheel
 - pip install --only-binary=numpy,scipy numpy scipy
 - pip install PyOpenGL
