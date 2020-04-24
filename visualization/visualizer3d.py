@@ -201,7 +201,7 @@ class Visualizer3D(object):
         scale : float
             Radius of each point.
         """
-        n = Visualizer3D._create_node_from_points(points, name=name, tube_radius=scale,
+        n = Visualizer3D._create_node_from_points(points, name=name, radius=scale,
                             pose=T_points_world, color=color, material=material, n_divs=n_cuts)
         Visualizer3D._scene.add_node(n)
         return n
@@ -469,7 +469,7 @@ class Visualizer3D(object):
 
 
     @staticmethod
-    def _create_node_from_points(points, name=None, pose=None, color=None, material=None, tube_radius=None, n_divs=20):
+    def _create_node_from_points(points, name=None, pose=None, color=None, material=None, radius=None, n_divs=20):
         """Helper method that creates a pyrender.Node from an array of points"""
         points = np.asanyarray(points)
         if points.ndim == 1:
@@ -480,22 +480,21 @@ class Visualizer3D(object):
         else:
             pose = pose.matrix
 
-        # Create vertex colors if needed
-        if color is not None:
-            color = np.asanyarray(color, dtype=np.float)
-            if color.ndim == 1 or len(color) != len(points):
-                color = np.repeat(color[np.newaxis,:], len(points), axis=0)
+        color = np.asanyarray(color, dtype=np.float) if color is not None else None
 
-        if tube_radius is not None:
-            poses = None
-            mesh = trimesh.creation.uv_sphere(tube_radius, [n_divs, n_divs])
+        # If color specified per point, use sprites
+        if color is not None and color.ndim > 1:
+            Visualizer3D._kwargs.update({'point_size': 1000 * radius})
+            m = Mesh.from_points(points, colors=color)
+        # otherwise, we can make pretty spheres
+        else:
+            mesh = trimesh.creation.uv_sphere(radius, [n_divs, n_divs])
             if color is not None:
-                mesh.visual.vertex_colors = color[0]
+                mesh.visual.vertex_colors = color
+            poses = None
             poses = np.tile(np.eye(4), (len(points), 1)).reshape(len(points),4,4)
             poses[:, :3, 3::4] = points[:,:,None]
             m = Mesh.from_trimesh(mesh, material=material, poses=poses)
-        else:
-            m = Mesh.from_points(points, colors=color)
 
         return Node(mesh=m, name=name, matrix=pose)
 
