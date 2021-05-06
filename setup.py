@@ -12,7 +12,7 @@ def get_imageio_dep():
 requirements = [
     get_imageio_dep(),
     'numpy',
-    'matplotlib<=2.2.0',
+    'matplotlib',
     'trimesh[easy]',
     'autolab_core',
     'autolab_perception',
@@ -39,6 +39,7 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Natural Language :: English',
         'Topic :: Scientific/Engineering'
     ],
