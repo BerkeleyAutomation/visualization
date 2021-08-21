@@ -89,4 +89,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Make docs
-        run: cd docs && ./gh_deploy.sh
+        run: cd docs && . gh_deploy.sh
