@@ -1,10 +1,7 @@
-import os
-import time
 import imageio
 import numpy as np
 import trimesh
 from shapely.geometry import Polygon
-import matplotlib.pyplot as plt
 from autolab_core import RigidTransform
 from pyrender import Scene, Mesh, Viewer, Node, MetallicRoughnessMaterial, TextAlign
 

@@ -4,10 +4,8 @@ Author: Jeff Mahler
 """
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.tri as mtri
 
-from autolab_core import Box, Contour
-from perception import BinaryImage, ColorImage, DepthImage, GrayscaleImage, RgbdImage, GdImage, SegmentationImage
+from autolab_core import Box, Contour, BinaryImage, ColorImage, DepthImage, GrayscaleImage, RgbdImage, GdImage, SegmentationImage
 
 class Visualizer2D:
     @staticmethod
