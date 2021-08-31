@@ -358,7 +358,9 @@ class Visualizer3D(object):
             If true, the mesh is smoothed before rendering.
         """
         end_point = start_point + direction
-        arrow_head = Visualizer3D._create_arrow_head(length=np.linalg.norm(direction), tube_radius=tube_radius)
+        arrow_head = Visualizer3D._create_arrow_head(
+            length=np.linalg.norm(direction), tube_radius=tube_radius, n_components=n_components
+        )
         arrow_head_rot = trimesh.geometry.align_vectors(np.array([0, 0, 1]), direction)
         arrow_head_tf = np.matmul(trimesh.transformations.translation_matrix(end_point), arrow_head_rot)
 

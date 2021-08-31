@@ -235,7 +235,6 @@ class Visualizer2D:
         grasp_center_style="+",
         grasp_axis_width=1,
         grasp_axis_style="--",
-        line_width=1.0,
         alpha=50,
         show_center=True,
         show_axis=False,
