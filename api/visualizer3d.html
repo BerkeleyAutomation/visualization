@@ -1,57 +1,58 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3-Dimensional Visualization &mdash; visualization 1.0.0 documentation</title>
   
-  <title>3-Dimensional Visualization &mdash; visualization 0.0.1 documentation</title>
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
   
 
   
   
-  
-  
 
   
 
   
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../genindex.html"/>
-        <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="visualization 0.0.1 documentation" href="../index.html"/>
-        <link rel="prev" title="2-Dimensional Visualization" href="visualizer2d.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="2-Dimensional Visualization" href="visualizer2d.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -65,7 +66,7 @@
             
             
               <div class="version">
-                0.0.1
+                1.0.0
               </div>
             
           
@@ -82,6 +83,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -89,12 +91,12 @@
               
             
             
-              <p class="caption"><span class="caption-text">Installation Guide</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Installation Guide</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../install/install.html">Python Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install/install.html#documentation">Documentation</a></li>
 </ul>
-<p class="caption"><span class="caption-text">API Documentation</span></p>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="visualizer2d.html">2-Dimensional Visualization</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">3-Dimensional Visualization</a><ul>
@@ -106,13 +108,14 @@
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">visualization</a>
@@ -120,10 +123,13 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
+
+
 
 
 
@@ -143,14 +149,14 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>3-Dimensional Visualization</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../_sources/api/visualizer3d.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -164,241 +170,49 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="dimensional-visualization">
+  <section id="dimensional-visualization">
 <h1>3-Dimensional Visualization<a class="headerlink" href="#dimensional-visualization" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="visualizer3d">
+<section id="visualizer3d">
 <h2>Visualizer3D<a class="headerlink" href="#visualizer3d" title="Permalink to this headline">¶</a></h2>
 <p>A module with static methods for creating and populating a
 3D visualization window with objects such as points, lines, and meshes.</p>
-<dl class="class">
-<dt id="visualization.Visualizer3D">
-<em class="property">class </em><code class="descclassname">visualization.</code><code class="descname">Visualizer3D</code><a class="headerlink" href="#visualization.Visualizer3D" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class containing static methods for visualization.
-The interface is styled after pyplot.
+<dl class="py class">
+<dt class="sig sig-object py" id="visualization.Visualizer3D">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">visualization.</span></span><span class="sig-name descname"><span class="pre">Visualizer3D</span></span><a class="headerlink" href="#visualization.Visualizer3D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class with static PyOpenGL-based 3D visualization tools.
 Should be thought of as a namespace rather than a class.</p>
-<dl class="staticmethod">
-<dt id="visualization.Visualizer3D.figure">
-<em class="property">static </em><code class="descname">figure</code><span class="sig-paren">(</span><em>bgcolor=(1</em>, <em>1</em>, <em>1)</em>, <em>size=(1000</em>, <em>1000)</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#visualization.Visualizer3D.figure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a figure.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>bgcolor</strong> (<em>(</em><em>3</em><em>,</em><em>) </em><em>float</em>) – Color of the background with values in [0,1].</li>
-<li><strong>size</strong> (<em>(</em><em>2</em><em>,</em><em>) </em><em>int</em>) – Width and height of the figure in pixels.</li>
-<li><strong>kwargs</strong> (<em>list</em>) – keyword args for scene viewer.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
-<dl class="staticmethod">
-<dt id="visualization.Visualizer3D.show">
-<em class="property">static </em><code class="descname">show</code><span class="sig-paren">(</span><em>animate=False, az=0.05, rate=30, axis=[0, 0, 1], clf=True</em><span class="sig-paren">)</span><a class="headerlink" href="#visualization.Visualizer3D.show" title="Permalink to this definition">¶</a></dt>
-<dd><p>Displays a figure and enables interaction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>animate</strong> (<em>bool</em>) – Whether or not to animate the scene.</li>
-<li><strong>az</strong> (<em>float</em><em> (</em><em>optional</em><em>)</em>) – The azimuth to rotate for each animation timestep.</li>
-<li><strong>rate</strong> (<em>float</em><em> (</em><em>optional</em><em>)</em>) – The frame rate at which to animate motion.</li>
-<li><strong>axis</strong> (<em>(</em><em>3</em><em>,</em><em>) </em><em>float</em><em> or </em><em>None</em>) – If present, the animation will rotate about the given axis in world coordinates.
-Otherwise, the animation will rotate in azimuth.</li>
-<li><strong>clf</strong> (<em>bool</em>) – If true, the Visualizer is cleared after showing the figure.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="visualization.Visualizer3D.clf">
-<em class="property">static </em><code class="descname">clf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#visualization.Visualizer3D.clf" title="Permalink to this definition">¶</a></dt>
-<dd><p>Clear the current figure</p>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="visualization.Visualizer3D.close">
-<em class="property">static </em><code class="descname">close</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#visualization.Visualizer3D.close" title="Permalink to this definition">¶</a></dt>
-<dd><p>Close the current figure</p>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="visualization.Visualizer3D.points">
-<em class="property">static </em><code class="descname">points</code><span class="sig-paren">(</span><em>points</em>, <em>T_points_world=None</em>, <em>color=(0</em>, <em>1</em>, <em>0)</em>, <em>scale=0.01</em>, <em>subsample=None</em>, <em>random=False</em><span class="sig-paren">)</span><a class="headerlink" href="#visualization.Visualizer3D.points" title="Permalink to this definition">¶</a></dt>
-<dd><p>Scatters a point cloud in pose T_points_world.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>points</strong> (<code class="xref py py-obj docutils literal"><span class="pre">autolab_core.BagOfPoints</span></code>) – point set to visualize</li>
-<li><strong>T_points_world</strong> (<code class="xref py py-obj docutils literal"><span class="pre">autolab_core.RigidTransform</span></code>) – pose of points, specified as a transformation from point frame to world frame</li>
-<li><strong>color</strong> (<em>3-tuple</em>) – color tuple</li>
-<li><strong>scale</strong> (<em>float</em>) – scale of each point</li>
-<li><strong>subsample</strong> (<em>int</em>) – parameter of subsampling to display fewer points</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="visualization.Visualizer3D.mesh">
-<em class="property">static </em><code class="descname">mesh</code><span class="sig-paren">(</span><em>mesh, T_mesh_world=RigidTransform(rotation=[[ 1.  0.  0.]  [ 0.  1.  0.]  [ 0.  0.  1.]], translation=[ 0.  0.  0.], from_frame=obj, to_frame=world), style=’surface’, smooth=False, color=(0.5, 0.5, 0.5)</em><span class="sig-paren">)</span><a class="headerlink" href="#visualization.Visualizer3D.mesh" title="Permalink to this definition">¶</a></dt>
-<dd><p>Visualizes a 3D triangular mesh.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>mesh</strong> (<code class="xref py py-obj docutils literal"><span class="pre">meshpy.Mesh3D</span></code>) – mesh to visualize</li>
-<li><strong>T_mesh_world</strong> (<code class="xref py py-obj docutils literal"><span class="pre">autolab_core.RigidTransform</span></code>) – pose of mesh, specified as a transformation from mesh frame to world frame</li>
-<li><strong>style</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>) – triangular mesh style, see Mayavi docs</li>
-<li><strong>color</strong> (<em>3-tuple</em>) – color tuple</li>
-<li><strong>opacity</strong> (<em>float</em>) – how opaque to render the surface</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="visualization.Visualizer3D.mesh_stable_pose">
-<em class="property">static </em><code class="descname">mesh_stable_pose</code><span class="sig-paren">(</span><em>mesh, T_obj_table, T_table_world=RigidTransform(rotation=[[ 1.  0.  0.]  [ 0.  1.  0.]  [ 0.  0.  1.]], translation=[ 0.  0.  0.], from_frame=table, to_frame=world), style=’wireframe’, smooth=False, color=(0.5, 0.5, 0.5), dim=0.15, plot_table=True, plot_com=False</em><span class="sig-paren">)</span><a class="headerlink" href="#visualization.Visualizer3D.mesh_stable_pose" title="Permalink to this definition">¶</a></dt>
-<dd><p>Visualizes a 3D triangular mesh.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>mesh</strong> (<code class="xref py py-obj docutils literal"><span class="pre">meshpy.Mesh3D</span></code>) – mesh to visualize</li>
-<li><strong>stable_pose</strong> (<code class="xref py py-obj docutils literal"><span class="pre">meshpy.StablePose</span></code>) – stable pose to visualize</li>
-<li><strong>T_table_world</strong> (<code class="xref py py-obj docutils literal"><span class="pre">autolab_core.RigidTransform</span></code>) – pose of table, specified as a transformation from mesh frame to world frame</li>
-<li><strong>style</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>) – triangular mesh style, see Mayavi docs</li>
-<li><strong>color</strong> (<em>3-tuple</em>) – color tuple</li>
-<li><strong>opacity</strong> (<em>float</em>) – how opaque to render the surface</li>
-<li><strong>dim</strong> (<em>float</em>) – the dimension of the table</li>
-<li><strong>plot_table</strong> (<em>bool</em>) – whether or not to plot the table</li>
-<li><strong>plot_com</strong> (<em>bool</em>) – whether or not to plot the mesh center of mass</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">pose of the mesh in world frame</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal"><span class="pre">autolab_core.RigidTransform</span></code></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="visualization.Visualizer3D.pose">
-<em class="property">static </em><code class="descname">pose</code><span class="sig-paren">(</span><em>T_frame_world</em>, <em>alpha=0.1</em>, <em>tube_radius=0.005</em>, <em>center_scale=0.01</em>, <em>show_frame=False</em><span class="sig-paren">)</span><a class="headerlink" href="#visualization.Visualizer3D.pose" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plots a pose with frame label.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>T_frame_world</strong> (<code class="xref py py-obj docutils literal"><span class="pre">autolab_core.RigidTransform</span></code>) – pose specified as a transformation from the poses frame to the world frame</li>
-<li><strong>alpha</strong> (<em>float</em>) – length of plotted x,y,z axes</li>
-<li><strong>tube_radius</strong> (<em>float</em>) – radius of plotted x,y,z axes</li>
-<li><strong>center_scale</strong> (<em>float</em>) – scale of the pose’s origin</li>
-<li><strong>show_frame</strong> (<em>bool</em>) – whether to show the frame name in text</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="visualization.Visualizer3D.table">
-<em class="property">static </em><code class="descname">table</code><span class="sig-paren">(</span><em>T_table_world=RigidTransform(rotation=[[ 1.  0.  0.]  [ 0.  1.  0.]  [ 0.  0.  1.]], translation=[ 0.  0.  0.], from_frame=table, to_frame=world), dim=0.16, color=(0, 0, 0)</em><span class="sig-paren">)</span><a class="headerlink" href="#visualization.Visualizer3D.table" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plots a table of dimension dim in pose T_table_world.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>T_table_world</strong> (<code class="xref py py-obj docutils literal"><span class="pre">autolab_core.RigidTransform</span></code>) – pose of the table in world frame</li>
-<li><strong>dim</strong> (<em>float</em>) – the dimensions of the table</li>
-<li><strong>color</strong> (<em>3-tuple</em>) – color of table</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="visualization.Visualizer3D.plot3d">
-<em class="property">static </em><code class="descname">plot3d</code><span class="sig-paren">(</span><em>points</em>, <em>color=(0.5</em>, <em>0.5</em>, <em>0.5)</em>, <em>tube_radius=0.005</em><span class="sig-paren">)</span><a class="headerlink" href="#visualization.Visualizer3D.plot3d" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot a 3d curve through a set of points using tubes.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>points</strong> (<em>(</em><em>n</em><em>,</em><em>3</em><em>) </em><em>float</em>) – A series of 3D points that define a curve in space.</li>
-<li><strong>color</strong> (<em>(</em><em>3</em><em>,</em><em>) </em><em>float</em>) – The color of the tube.</li>
-<li><strong>tube_radius</strong> (<em>float</em>) – Radius of tube representing curve.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">TODO for this – change to instanced scene object, need to have similarity TF that
-can scale anisotropically.</p>
-</div>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-      
-        <a href="visualizer2d.html" class="btn btn-neutral" title="2-Dimensional Visualization" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="visualizer2d.html" class="btn btn-neutral float-left" title="2-Dimensional Visualization" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Jeff Mahler.
+        &#169; Copyright 2016, Jeff Mahler.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -407,37 +221,15 @@ can scale anisotropically.</p>
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'0.0.1',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>
