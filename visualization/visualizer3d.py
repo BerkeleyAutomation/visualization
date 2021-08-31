@@ -1,7 +1,7 @@
 import imageio
 import numpy as np
 import trimesh
-from autolab_core import RigidTransform, Point
+from autolab_core import Point, RigidTransform
 from pyrender import Mesh, MetallicRoughnessMaterial, Node, Scene, TextAlign, Viewer
 from shapely.geometry import Polygon
 

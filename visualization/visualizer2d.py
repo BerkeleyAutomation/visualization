@@ -16,6 +16,7 @@ from autolab_core import (
     SegmentationImage,
 )
 
+
 class Visualizer2D:
     @staticmethod
     def figure(size=(8, 8), *args, **kwargs):
